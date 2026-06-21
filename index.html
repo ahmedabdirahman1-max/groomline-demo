@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HollerDesk — Live Front-Desk Demo</title>
+<meta name="description" content="Talk or type to HollerDesk&#39;s virtual front desk. It books jobs, gives quotes, answers questions, reschedules, and flags emergencies — capturing every lead in real time." />
+<meta name="theme-color" content="#0a1b33" />
+<style>
+  :root{
+    --bg1:#0a1b33;--bg2:#0e2747;--glass:rgba(255,255,255,.05);--glass-line:rgba(255,255,255,.13);
+    --txt:#eef4fb;--txt2:#9fb3cf;--accent:#ff6a2b;--accent2:#2ed3a0;--accent3:#ffb24a;--blue:#3f86ff;--lime:#39d98a;--red:#ff5a5f;
+    --grad:linear-gradient(120deg,#ff6a2b,#ff9d4a);--grad2:linear-gradient(120deg,#2ed3a0,#3f86ff);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--txt);min-height:100vh;line-height:1.5;
+    background:radial-gradient(1200px 600px at 10% -10%,#13315c 0%,transparent 60%),radial-gradient(900px 500px at 110% 10%,#0f4f7a 0%,transparent 55%),linear-gradient(160deg,var(--bg1),var(--bg2));background-attachment:fixed}
+  .wrap{max-width:1120px;margin:0 auto;padding:22px}
+  .top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:1.35rem;letter-spacing:-.02em}
+  .brand .mark{width:38px;height:38px;border-radius:11px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 6px 22px rgba(255,106,43,.5)}
+  .tagline{color:var(--txt2);font-size:.92rem}
+  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  select,.toggle{background:var(--glass);border:1px solid var(--glass-line);color:var(--txt);border-radius:10px;padding:8px 12px;font-size:.85rem;cursor:pointer}
+  .toggle.on{background:var(--grad2);color:#06122a;border-color:transparent;font-weight:700}
+  .grid{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;margin-top:14px}
+  @media(max-width:880px){.grid{grid-template-columns:1fr}}
+  .panel{background:var(--glass);border:1px solid var(--glass-line);border-radius:20px;backdrop-filter:blur(14px);overflow:hidden}
+  .phone-head{padding:16px 18px;border-bottom:1px solid var(--glass-line);display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.04)}
+  .avatar{width:42px;height:42px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+  .ph-name{font-weight:700}.ph-status{font-size:.8rem;color:var(--accent2);display:flex;align-items:center;gap:6px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--accent2);box-shadow:0 0 0 0 rgba(46,211,160,.7);animation:pulse 1.8s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,211,160,.6)}70%{box-shadow:0 0 0 9px rgba(46,211,160,0)}100%{box-shadow:0 0 0 0 rgba(46,211,160,0)}}
+  .chat{height:400px;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px}
+  .msg{max-width:82%;padding:11px 15px;border-radius:16px;font-size:.95rem;animation:rise .3s ease}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .msg.bot{align-self:flex-start;background:rgba(255,255,255,.09);border-bottom-left-radius:5px}
+  .msg.me{align-self:flex-end;background:var(--grad);color:#fff;border-bottom-right-radius:5px;font-weight:500}
+  .typing{align-self:flex-start;display:flex;gap:4px;padding:13px 16px;background:rgba(255,255,255,.09);border-radius:16px;border-bottom-left-radius:5px}
+  .typing span{width:7px;height:7px;border-radius:50%;background:var(--txt2);animation:blink 1.2s infinite}
+  .typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
+  .chips{display:flex;gap:7px;flex-wrap:wrap;padding:0 14px 12px}
+  .chip{background:var(--glass);border:1px solid var(--glass-line);color:var(--txt2);border-radius:999px;padding:7px 13px;font-size:.82rem;cursor:pointer;transition:all .12s}
+  .chip:hover{border-color:var(--accent);color:var(--txt)}
+  .inbar{display:flex;gap:9px;padding:14px;border-top:1px solid var(--glass-line);background:rgba(0,0,0,.18)}
+  .inbar input{flex:1;background:var(--glass);border:1px solid var(--glass-line);color:var(--txt);border-radius:12px;padding:12px 14px;font-size:.95rem;outline:none}
+  .inbar input:focus{border-color:var(--accent)}
+  .iconbtn{width:46px;border:none;border-radius:12px;cursor:pointer;font-size:1.1rem;color:#fff}
+  .send{background:var(--grad)}.mic{background:var(--glass);border:1px solid var(--glass-line)}
+  .mic.live{background:var(--red);animation:pulse2 1s infinite}@keyframes pulse2{50%{opacity:.6}}
+  .cap-head{padding:16px 18px;border-bottom:1px solid var(--glass-line);font-weight:700;display:flex;align-items:center;gap:8px}
+  .cap-body{padding:16px 18px}
+  .intent{display:none;margin-bottom:6px;padding:9px 13px;border-radius:11px;font-size:.85rem;font-weight:700;background:rgba(63,134,255,.16);border:1px solid var(--blue);color:#cfe0ff}
+  .intent.show{display:block;animation:rise .3s ease}
+  .field{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px dashed rgba(255,255,255,.09);font-size:.92rem}
+  .field .k{color:var(--txt2)}.field .v{font-weight:600;text-align:right;color:var(--txt);max-width:60%}
+  .field .v.empty{color:rgba(255,255,255,.25);font-weight:400;font-style:italic}
+  .field.filled{animation:flash .6s ease}@keyframes flash{0%{background:rgba(57,217,138,.18)}100%{background:transparent}}
+  .urg{margin-top:14px;padding:13px 15px;border-radius:13px;font-size:.9rem;display:none}
+  .urg.emergency{display:block;background:rgba(255,90,95,.16);border:1px solid var(--red);color:#ffd2d4}
+  .urg.good{display:block;background:rgba(46,211,160,.14);border:1px solid var(--accent2);color:#b9fff2}
+  .owner{margin-top:14px;border-radius:14px;overflow:hidden;border:1px solid var(--glass-line);display:none}
+  .owner.show{display:block;animation:rise .4s ease}
+  .owner .oh{background:var(--grad2);color:#06122a;font-weight:700;padding:9px 14px;font-size:.85rem}
+  .owner .ob{padding:13px 15px;font-size:.86rem;color:var(--txt2)}.owner .ob b{color:var(--txt)}
+  .restart{margin-top:16px;width:100%;padding:12px;border:none;border-radius:12px;background:var(--glass);border:1px solid var(--glass-line);color:var(--txt);font-weight:600;cursor:pointer}
+  .restart:hover{background:rgba(255,255,255,.1)}
+  .fnrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;justify-content:center}
+  .fn{font-size:.72rem;color:var(--txt2);background:var(--glass);border:1px solid var(--glass-line);border-radius:999px;padding:4px 10px}
+  .hint{text-align:center;color:var(--txt2);font-size:.82rem;margin-top:14px}.hint b{color:var(--accent3)}
+  .badge{display:inline-block;background:var(--glass);border:1px solid var(--glass-line);border-radius:999px;padding:4px 11px;font-size:.74rem;color:var(--txt2);margin-left:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <div class="brand"><div class="mark">📣</div> HollerDesk <span class="badge">LIVE DEMO</span></div>
+      <div class="tagline">One assistant, many jobs — it books, quotes, answers questions, reschedules & flags emergencies.</div>
+    </div>
+    <div class="controls">
+      <select id="trade" title="Business type">
+        <option value="garage">🚪 Garage Door Co</option>
+        <option value="hvac">❄️ HVAC Co</option>
+        <option value="plumbing">🔧 Plumbing Co</option>
+      </select>
+      <button class="toggle on" id="voiceBtn" title="Toggle voice">🔊 Voice on</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <div class="phone-head">
+        <div class="avatar">📣</div>
+        <div>
+          <div class="ph-name" id="bizName">HollerDesk · Garage Door Co</div>
+          <div class="ph-status"><span class="dot"></span> answering — 24/7</div>
+        </div>
+      </div>
+      <div class="chat" id="chat"></div>
+      <div class="chips" id="chips">
+        <span class="chip" data-s="My garage door spring snapped and it won't open">🔧 New job</span>
+        <span class="chip" data-s="How much do you charge for a service call?">💵 Get a quote</span>
+        <span class="chip" data-s="What are your hours and service area?">❓ Ask a question</span>
+        <span class="chip" data-s="I need to reschedule my appointment">📅 Reschedule</span>
+        <span class="chip" data-s="Confirm my appointment">✅ Confirm reminder</span>
+        <span class="chip" data-s="I'd like to leave a review">⭐ Leave a review</span>
+        <span class="chip" data-s="There's water flooding my basement right now!">🚨 Emergency</span>
+      </div>
+      <div class="inbar">
+        <input id="input" placeholder="Type your reply…  or tap a button above" autocomplete="off"/>
+        <button class="iconbtn mic" id="micBtn" title="Speak">🎤</button>
+        <button class="iconbtn send" id="sendBtn" title="Send">➤</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="cap-head">🧲 What HollerDesk captured <span class="badge" id="capCount">live</span></div>
+      <div class="cap-body">
+        <div class="intent" id="intent"></div>
+        <div class="field" data-f="name"><span class="k">Name</span><span class="v empty" id="f-name">—</span></div>
+        <div class="field" data-f="phone"><span class="k">Phone</span><span class="v empty" id="f-phone">—</span></div>
+        <div class="field" data-f="address"><span class="k">Address</span><span class="v empty" id="f-address">—</span></div>
+        <div class="field" data-f="service"><span class="k">Job / topic</span><span class="v empty" id="f-service">—</span></div>
+        <div class="field" data-f="urgency"><span class="k">Urgency</span><span class="v empty" id="f-urgency">—</span></div>
+        <div class="field" data-f="outcome"><span class="k">Outcome</span><span class="v empty" id="f-outcome">—</span></div>
+        <div class="urg" id="urg"></div>
+        <div class="owner" id="owner"><div class="oh" id="ownerHead">📲 Sent to the owner — instantly</div><div class="ob" id="ownerBody"></div></div>
+        <button class="restart" id="restart">↺ Start a new call</button>
+        <div class="fnrow"><span class="fn">📞 Answer</span><span class="fn">📅 Book</span><span class="fn">💵 Quote</span><span class="fn">❓ FAQ</span><span class="fn">🔁 Reschedule</span><span class="fn">⏰ Reminders</span><span class="fn">⭐ Reviews</span><span class="fn">🚨 Escalate</span><span class="fn">🛡️ Spam screen</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">It auto-detects what the caller wants. Try <b>"how much for a new water heater"</b>, <b>"what are your hours"</b>, or <b>"reschedule my appt"</b>.</div>
+</div>
+
+<script>
+/* ===== HollerDesk multi-function virtual front desk (deterministic brain, no backend) =====
+   Functions: answer · book · quote · FAQ · reschedule · emergency-escalate · spam-screen.
+   Production swaps this engine for an LLM + Vapi telephony; the flow & capture are identical. */
+const $=s=>document.querySelector(s);
+const chat=$('#chat');
+let voiceOn=true, recognizing=false, recog=null;
+// Voices load asynchronously — the natural/online ones often arrive via 'voiceschanged'
+// after first paint, so cache them and refresh, and warm the list up on load.
+let VOICES=[];
+function loadVoices(){if(window.speechSynthesis)VOICES=speechSynthesis.getVoices()||[];}
+if(window.speechSynthesis){loadVoices();speechSynthesis.addEventListener('voiceschanged',loadVoices);}
+const lead={intent:null,name:null,phone:null,address:null,service:null,urgency:null,outcome:null,emergency:false};
+let step='await_intent';
+
+const BIZ={garage:'Garage Door Co',hvac:'HVAC Co',plumbing:'Plumbing Co'};
+const SVC={garage:'garage door',hvac:'AC / heating',plumbing:'plumbing'};
+const WINDOWS=['today 2–4pm','today 4–6pm','tomorrow 8–10am','tomorrow 12–2pm'];
+const KB={
+  garage:{hours:'7am–7pm, Mon–Sat',area:'the Twin Cities metro',price:'A service call starts around $89, applied to the repair'},
+  hvac:{hours:'8am–8pm daily, emergencies 24/7',area:'the Twin Cities metro',price:'A diagnostic visit starts around $99'},
+  plumbing:{hours:'8am–6pm, plus 24/7 emergencies',area:'the Twin Cities metro',price:'A service call starts around $79'}
+};
+const EMERGENCY=/(gas|smell|flood|flooding|water everywhere|burst|fire|smoke|spark|no heat|freezing|no a\/?c|carbon monoxide|sewage|electrical|won'?t shut)/i;
+const SPAM=/(warranty|seo|rank your|google listing|press 1|final notice|car's extended|solar quote|marketing service)/i;
+
+function add(t,who){const d=document.createElement('div');d.className='msg '+who;d.textContent=t;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;}
+function typing(){const t=document.createElement('div');t.className='typing';t.id='typing';t.innerHTML='<span></span><span></span><span></span>';chat.appendChild(t);chat.scrollTop=chat.scrollHeight;}
+function untyping(){const t=$('#typing');if(t)t.remove();}
+function pickVoice(){const vs=(VOICES.length?VOICES:speechSynthesis.getVoices()).filter(v=>v.lang&&v.lang.toLowerCase().startsWith('en'));
+  const rank=v=>{const n=(v.name+' '+(v.voiceURI||'')).toLowerCase();
+    if(/zira/.test(n))return 0;                                                       // preferred app voice — Microsoft Zira
+    if(/natural|neural|premium|enhanced/.test(n))return 1;                            // neural/premium fallback (non-Windows)
+    if(/google (us|uk) english/.test(n))return 2;                                    // Google online voices
+    if(/samantha|aria|jenny|libby|sonia|ava|allison|joanna|hazel|susan|eva/.test(n))return 3; // premium/female named voices
+    if(/female/.test(n))return 4;
+    if(/david|mark|george|guy|paul|james|ryan|eric|christopher|matthew|alex/.test(n))return 6; // basic male voices — last resort
+    return 5;};
+  return vs.slice().sort((a,b)=>rank(a)-rank(b))[0];}
+function speak(t){if(!voiceOn||!window.speechSynthesis)return;const u=new SpeechSynthesisUtterance(t.replace(/[✅👋📲🧲🚨🛡️]/g,''));u.lang='en-US';u.rate=0.97;u.pitch=1.0;const p=pickVoice();if(p)u.voice=p;speechSynthesis.cancel();speechSynthesis.speak(u);}
+function bot(t,d=650){typing();setTimeout(()=>{untyping();add(t,'bot');speak(t);},d);}
+
+function setField(f,val){lead[f]=val;const el=$('#f-'+f);el.textContent=val;el.classList.remove('empty');el.parentElement.classList.add('filled');setTimeout(()=>el.parentElement.classList.remove('filled'),600);}
+function setIntent(label,color){lead.intent=label;const el=$('#intent');el.className='intent show';el.textContent='🎯 Detected: '+label;}
+function extractName(t){let m=t.match(/(?:my name is|this is|it'?s|i'?m|im)\s+([a-zA-Z][a-zA-Z'-]+)/i);return ((m?m[1]:t.trim().split(/\s+/)[0])||'there').replace(/[^a-zA-Z'-]/g,'')||'there';}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function extractPhone(t){const d=t.replace(/[^\d]/g,'');return d.length>=10?d.slice(-10).replace(/(\d{3})(\d{3})(\d{4})/,'($1) $2-$3'):t.trim();}
+function shortJob(t){return t.length>42?t.slice(0,42)+'…':t;}
+
+function detectIntent(t){
+  if(SPAM.test(t))return'spam';
+  if(EMERGENCY.test(t))return'emergency';
+  if(/leave (a )?review|write (a )?review|rate you|review link/i.test(t))return'review';
+  if(/confirm( my)?( appointment| appt| booking)?|^\s*c\s*$|^reminder/i.test(t))return'reminder';
+  if(/reschedul|cancel|move (my|the)|change (my|the).*(appoint|booking|time)|push back/i.test(t))return'reschedule';
+  if(/quote|estimate|how much|price|pricing|cost|charge|ballpark|rate/i.test(t))return'quote';
+  if(/hour|open|close|what time|service area|areas|do you (serve|cover|work|do)|where are you|located|coverage|finance|warranty\b/i.test(t))return'faq';
+  return'book';
+}
+
+function handle(text){
+  add(text,'me');
+  const trade=$('#trade').value, biz=BIZ[trade], svc=SVC[trade], kb=KB[trade];
+
+  if(step==='await_intent'){
+    const it=detectIntent(text);
+    if(it==='spam'){setIntent('Spam / robocall');setField('service',shortJob(text));setField('outcome','🛡️ Screened — blocked');
+      bot("This looks like a sales or spam call, so I'm screening it out — your owner won't be bothered. Take care!",500);
+      const u=$('#urg');u.className='urg good';u.innerHTML='🛡️ <b>Spam screened</b> — filtered before it ever reached the owner.';step='ended';return;}
+    setField('service',shortJob(text));
+    if(it==='emergency'){lead.emergency=true;setIntent('Emergency');setField('urgency','🚨 EMERGENCY');bot("Okay — I'm flagging this as urgent. First, can I grab your name?");step='name';return;}
+    if(it==='quote'){setIntent('Quote / estimate');bot(`Happy to get you an estimate on your ${svc}. What's the issue, and can I grab your name?`);step='name';return;}
+    if(it==='reminder'){setIntent('Reminder reply');setField('service','Appointment reminder');setField('outcome','✅ Confirmed');bot("Great — you're all confirmed! We'll see you then. Reply here anytime if you need to change it.",450);const u=$('#urg');u.className='urg good';u.innerHTML='📅 <b>Reminder confirmed</b> — appointment locked in, owner updated.';fireOwner('faq');step='wrap';return;}
+    if(it==='review'){setIntent('Review request');setField('service','Review request');setField('outcome','⭐ Review link sent');bot("Thanks so much! Here's your review link: g.page/r/your-business ⭐ — it takes 20 seconds and really helps us out.",450);const u=$('#urg');u.className='urg good';u.innerHTML='⭐ <b>Review request sent</b> — fired automatically right after the job.';step='wrap';return;}
+    if(it==='faq'){setIntent('Question');answerFaq(text,kb,svc);return;}
+    if(it==='reschedule'){setIntent('Reschedule');setField('service','Reschedule existing appointment');bot("Sure, I can help reschedule. What's the name on the appointment?");step='resched_name';return;}
+    setIntent('New booking');bot("Happy to help with that. Can I grab your name?");step='name';return;
+  }
+
+  /* FAQ → maybe book */
+  if(step==='faq_more'){
+    if(/\b(yes|sure|ok|okay|please|book|schedule|yeah|yep)\b/i.test(text)){lead.intent='New booking';$('#intent').textContent='🎯 Detected: New booking';bot("Great — can I grab your name?");step='name';return;}
+    if(/\b(no|nope|nothing|that'?s it|all good|thanks|thank you)\b/i.test(text)){setField('outcome','Question answered');bot("You got it — thanks for calling! 👋",400);fireOwner('faq');step='ended';return;}
+    answerFaq(text,KB[$('#trade').value],SVC[$('#trade').value]);return;
+  }
+
+  /* shared identity capture for book/quote/emergency */
+  if(step==='name'){setField('name',cap(extractName(text)));bot(`Thanks ${lead.name}! What's the best phone number?`);step='phone';return;}
+  if(step==='phone'){setField('phone',extractPhone(text));bot(`Got it — ${lead.phone}. And the service address?`);step='address';return;}
+  if(step==='address'){setField('address',text.trim());
+    if(lead.emergency){fireEmergency();return;}
+    if(lead.intent==='Quote / estimate'){setField('outcome','Estimate requested');bot(`Perfect — a technician will text you an estimate for your ${SVC[$('#trade').value]} shortly. Anything else?`,700);fireOwner('quote');step='wrap';return;}
+    bot("Is this an emergency, or can we schedule a visit?");step='urgency';return;}
+  if(step==='urgency'){
+    if(EMERGENCY.test(text)||/emergenc|urgent|right now|asap/i.test(text)){lead.emergency=true;setField('urgency','🚨 EMERGENCY');fireEmergency();return;}
+    setField('urgency','Scheduled');bot(`I can get a technician out ${WINDOWS[0]} or ${WINDOWS[2]}. Which works better?`);step='book';return;}
+  if(step==='book'){let w=WINDOWS[0];if(/4|6|later|evening/i.test(text))w=WINDOWS[1];if(/tomorrow|8|morning/i.test(text))w=WINDOWS[2];if(/12|noon|afternoon/i.test(text))w=WINDOWS[3];
+    setField('outcome','✅ Booked '+w);bot(`Perfect — you're booked for ${w}. ✅`,500);
+    setTimeout(()=>{bot(`All set, ${lead.name}! I've sent everything to the team. Anything else?`,650);const u=$('#urg');u.className='urg good';u.innerHTML='✅ <b>Job booked</b> and dropped on the calendar — the owner did nothing.';fireOwner('booked');step='wrap';},1500);return;}
+
+  /* reschedule flow */
+  if(step==='resched_name'){setField('name',cap(extractName(text)));bot(`Thanks ${lead.name} — what's the phone number on file?`);step='resched_phone';return;}
+  if(step==='resched_phone'){setField('phone',extractPhone(text));bot("And what day or time works better for you?");step='resched_when';return;}
+  if(step==='resched_when'){setField('urgency','Reschedule');setField('outcome','🔁 Reschedule → '+shortJob(text));bot(`Got it — I've put in a reschedule request for ${text.trim()} and the team will confirm by text. Anything else?`,700);fireOwner('reschedule');step='wrap';return;}
+
+  /* wrap-up after any completed flow */
+  if(step==='wrap'){
+    if(/\b(no|nope|nothing|that'?s it|all good|thanks|thank you|bye)\b/i.test(text)){bot("Thanks for calling — take care! 👋",400);step='ended';return;}
+    // they asked for something else → re-route
+    step='await_intent';handle(text);return;
+  }
+  bot("Got it — could you tell me a little more?");
+}
+
+function answerFaq(text,kb,svc){
+  let a;
+  if(/hour|open|close|what time/i.test(text))a=`We're open ${kb.hours}.`;
+  else if(/area|cover|where|located|serve/i.test(text))a=`We cover ${kb.area}.`;
+  else if(/price|cost|how much|charge|quote|estimate|rate|ballpark/i.test(text))a=`${kb.price} — the technician confirms the exact price on site.`;
+  else if(/finance|payment|warranty/i.test(text))a=`Yes — we offer financing and stand behind our work. A team member can walk you through the details.`;
+  else a=`Yes, we handle that — we're a full-service ${svc} company.`;
+  setField('service',shortJob(text));setField('outcome','Question answered');
+  bot(a+" Would you like me to book you in while I have you?",600);step='faq_more';
+}
+function fireEmergency(){
+  if(!lead.urgency||lead.urgency!=='🚨 EMERGENCY')setField('urgency','🚨 EMERGENCY');
+  setField('outcome','🚨 Escalated to owner');
+  bot("I'm flagging this as urgent and getting the owner to call you right back. Hang tight — help is on the way.",500);
+  const u=$('#urg');u.className='urg emergency';u.innerHTML='🚨 <b>Emergency detected</b> — owner is being <b>called right now</b>, not just messaged.';
+  setTimeout(()=>{fireOwner('emergency');setTimeout(()=>{bot(`You're all set, ${lead.name||'there'} — someone will reach you immediately.`,600);step='ended';},900);},700);
+}
+function fireOwner(kind){
+  const heads={booked:'📲 Lead + booking sent to the owner',quote:'📲 Estimate request sent to the owner',reschedule:'📲 Reschedule request sent to the owner',faq:'📲 Call summary sent to the owner',emergency:'🚨 URGENT — owner called immediately'};
+  const o=$('#owner');o.classList.add('show');$('#ownerHead').textContent=heads[kind]||'📲 Sent to the owner';
+  $('#ownerBody').innerHTML=`<b>${lead.name||'Caller'}</b> ${lead.phone?'· '+lead.phone:''}<br>${lead.address?lead.address+'<br>':''}`+
+    `Topic: <b>${lead.service||'—'}</b><br>`+(kind==='emergency'?`<b style="color:#ff9a9d">Call back immediately</b>`:`Outcome: <b>${lead.outcome||'—'}</b>`);
+}
+
+/* controls */
+function start(){
+  chat.innerHTML='';Object.keys(lead).forEach(k=>lead[k]=k==='emergency'?false:null);
+  ['name','phone','address','service','urgency','outcome'].forEach(f=>{const e=$('#f-'+f);e.textContent='—';e.classList.add('empty');});
+  $('#intent').className='intent';$('#urg').className='urg';$('#owner').classList.remove('show');
+  step='await_intent';const b=BIZ[$('#trade').value];$('#bizName').textContent='HollerDesk · '+b;
+  bot(`Thanks for calling ${b}, this is the front desk — how can I help today?`,350);
+}
+$('#sendBtn').onclick=()=>{const v=$('#input').value.trim();if(!v||step==='ended')return;$('#input').value='';handle(v);};
+$('#input').addEventListener('keydown',e=>{if(e.key==='Enter')$('#sendBtn').click();});
+$('#restart').onclick=start;$('#trade').onchange=start;
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{if(step==='ended')start();const v=c.dataset.s;setTimeout(()=>{if(step!=='ended'){$('#input').value='';handle(v);}},step==='await_intent'?0:50);});
+$('#voiceBtn').onclick=function(){voiceOn=!voiceOn;this.classList.toggle('on',voiceOn);this.textContent=voiceOn?'🔊 Voice on':'🔇 Voice off';if(!voiceOn)speechSynthesis.cancel();};
+
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(SR){recog=new SR();recog.continuous=false;recog.interimResults=false;recog.lang='en-US';
+  recog.onresult=e=>{$('#input').value=e.results[0][0].transcript;$('#sendBtn').click();};
+  recog.onend=()=>{recognizing=false;$('#micBtn').classList.remove('live');};
+  $('#micBtn').onclick=()=>{if(recognizing){recog.stop();return;}try{recog.start();recognizing=true;$('#micBtn').classList.add('live');}catch(e){}};
+}else{$('#micBtn').style.display='none';}
+start();
+</script>
+</body>
+</html>
