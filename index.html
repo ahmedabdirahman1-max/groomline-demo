@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>HollerDesk — Live Front-Desk Demo</title>
-<meta name="description" content="Talk or type to HollerDesk&#39;s virtual front desk. It books jobs, gives quotes, answers questions, reschedules, and flags emergencies — capturing every lead in real time." />
-<meta name="theme-color" content="#0a1b33" />
+<title>GroomLine — Live Front-Desk Demo</title>
+<meta name="description" content="Talk or type to GroomLine&#39;s virtual front desk for groomers. It books grooms, quotes by size, takes a deposit, answers questions, reschedules, and flags welfare cases — capturing every lead in real time." />
+<meta name="theme-color" content="#1b1147" />
 <style>
   :root{
-    --bg1:#0a1b33;--bg2:#0e2747;--glass:rgba(255,255,255,.05);--glass-line:rgba(255,255,255,.13);
-    --txt:#eef4fb;--txt2:#9fb3cf;--accent:#ff6a2b;--accent2:#2ed3a0;--accent3:#ffb24a;--blue:#3f86ff;--lime:#39d98a;--red:#ff5a5f;
-    --grad:linear-gradient(120deg,#ff6a2b,#ff9d4a);--grad2:linear-gradient(120deg,#2ed3a0,#3f86ff);
+    --bg1:#1b1147;--bg2:#102a40;--glass:rgba(255,255,255,.06);--glass-line:rgba(255,255,255,.14);
+    --txt:#f4f1ff;--txt2:#bcb3da;--accent:#ff6b6b;--accent2:#2dd4bf;--accent3:#ffd166;--blue:#8aa0ff;--lime:#34d399;--red:#ff5a6a;
+    --grad:linear-gradient(120deg,#ff6b6b,#ffa07a);--grad2:linear-gradient(120deg,#2dd4bf,#8aa0ff);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--txt);min-height:100vh;line-height:1.5;
-    background:radial-gradient(1200px 600px at 10% -10%,#13315c 0%,transparent 60%),radial-gradient(900px 500px at 110% 10%,#0f4f7a 0%,transparent 55%),linear-gradient(160deg,var(--bg1),var(--bg2));background-attachment:fixed}
+    background:radial-gradient(1200px 600px at 10% -10%,#3a1d6e 0%,transparent 60%),radial-gradient(900px 500px at 110% 10%,#0f5a6e 0%,transparent 55%),linear-gradient(160deg,var(--bg1),var(--bg2));background-attachment:fixed}
   .wrap{max-width:1120px;margin:0 auto;padding:22px}
   .top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:8px}
   .brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:1.35rem;letter-spacing:-.02em}
@@ -76,14 +76,13 @@
 <div class="wrap">
   <div class="top">
     <div>
-      <div class="brand"><div class="mark">📣</div> HollerDesk <span class="badge">LIVE DEMO</span></div>
-      <div class="tagline">One assistant, many jobs — it books, quotes, answers questions, reschedules & flags emergencies.</div>
+      <div class="brand"><div class="mark">🐾</div> GroomLine <span class="badge">LIVE DEMO</span></div>
+      <div class="tagline">One front desk for groomers — it books, quotes by size, takes a deposit, reschedules & flags welfare cases.</div>
     </div>
     <div class="controls">
       <select id="trade" title="Business type">
-        <option value="garage">🚪 Garage Door Co</option>
-        <option value="hvac">❄️ HVAC Co</option>
-        <option value="plumbing">🔧 Plumbing Co</option>
+        <option value="mobile">🚐 Paws on Wheels (mobile)</option>
+        <option value="salon">🛁 The Groom Room (salon)</option>
       </select>
       <button class="toggle on" id="voiceBtn" title="Toggle voice">🔊 Voice on</button>
     </div>
@@ -92,21 +91,21 @@
   <div class="grid">
     <div class="panel">
       <div class="phone-head">
-        <div class="avatar">📣</div>
+        <div class="avatar">🐾</div>
         <div>
-          <div class="ph-name" id="bizName">HollerDesk · Garage Door Co</div>
-          <div class="ph-status"><span class="dot"></span> answering — 24/7</div>
+          <div class="ph-name" id="bizName">GroomLine · Paws on Wheels</div>
+          <div class="ph-status"><span class="dot"></span> answering — even mid-groom</div>
         </div>
       </div>
       <div class="chat" id="chat"></div>
       <div class="chips" id="chips">
-        <span class="chip" data-s="My garage door spring snapped and it won't open">🔧 New job</span>
-        <span class="chip" data-s="How much do you charge for a service call?">💵 Get a quote</span>
-        <span class="chip" data-s="What are your hours and service area?">❓ Ask a question</span>
+        <span class="chip" data-s="My goldendoodle needs a full groom">🐩 New groom</span>
+        <span class="chip" data-s="How much for a full groom?">💵 Get a quote</span>
+        <span class="chip" data-s="What are your hours and area?">❓ Ask a question</span>
         <span class="chip" data-s="I need to reschedule my appointment">📅 Reschedule</span>
         <span class="chip" data-s="Confirm my appointment">✅ Confirm reminder</span>
         <span class="chip" data-s="I'd like to leave a review">⭐ Leave a review</span>
-        <span class="chip" data-s="There's water flooding my basement right now!">🚨 Emergency</span>
+        <span class="chip" data-s="My dog is really badly matted, almost a solid pelt">🚨 Matting / welfare</span>
       </div>
       <div class="inbar">
         <input id="input" placeholder="Type your reply…  or tap a button above" autocomplete="off"/>
@@ -116,170 +115,175 @@
     </div>
 
     <div class="panel">
-      <div class="cap-head">🧲 What HollerDesk captured <span class="badge" id="capCount">live</span></div>
+      <div class="cap-head">🧲 What GroomLine captured <span class="badge" id="capCount">live</span></div>
       <div class="cap-body">
         <div class="intent" id="intent"></div>
-        <div class="field" data-f="name"><span class="k">Name</span><span class="v empty" id="f-name">—</span></div>
+        <div class="field" data-f="name"><span class="k">Owner</span><span class="v empty" id="f-name">—</span></div>
         <div class="field" data-f="phone"><span class="k">Phone</span><span class="v empty" id="f-phone">—</span></div>
-        <div class="field" data-f="address"><span class="k">Address</span><span class="v empty" id="f-address">—</span></div>
-        <div class="field" data-f="service"><span class="k">Job / topic</span><span class="v empty" id="f-service">—</span></div>
-        <div class="field" data-f="urgency"><span class="k">Urgency</span><span class="v empty" id="f-urgency">—</span></div>
+        <div class="field" data-f="pet"><span class="k">Pet</span><span class="v empty" id="f-pet">—</span></div>
+        <div class="field" data-f="address"><span class="k">Address / area</span><span class="v empty" id="f-address">—</span></div>
+        <div class="field" data-f="service"><span class="k">Service</span><span class="v empty" id="f-service">—</span></div>
+        <div class="field" data-f="urgency"><span class="k">Status</span><span class="v empty" id="f-urgency">—</span></div>
         <div class="field" data-f="outcome"><span class="k">Outcome</span><span class="v empty" id="f-outcome">—</span></div>
         <div class="urg" id="urg"></div>
-        <div class="owner" id="owner"><div class="oh" id="ownerHead">📲 Sent to the owner — instantly</div><div class="ob" id="ownerBody"></div></div>
+        <div class="owner" id="owner"><div class="oh" id="ownerHead">📲 Sent to the groomer — instantly</div><div class="ob" id="ownerBody"></div></div>
         <button class="restart" id="restart">↺ Start a new call</button>
-        <div class="fnrow"><span class="fn">📞 Answer</span><span class="fn">📅 Book</span><span class="fn">💵 Quote</span><span class="fn">❓ FAQ</span><span class="fn">🔁 Reschedule</span><span class="fn">⏰ Reminders</span><span class="fn">⭐ Reviews</span><span class="fn">🚨 Escalate</span><span class="fn">🛡️ Spam screen</span></div>
+        <div class="fnrow"><span class="fn">📞 Answer</span><span class="fn">📅 Book</span><span class="fn">💵 Quote</span><span class="fn">💳 Deposit</span><span class="fn">❓ FAQ</span><span class="fn">🔁 Reschedule</span><span class="fn">⏰ Reminders</span><span class="fn">⭐ Reviews</span><span class="fn">🚨 Welfare flag</span></div>
       </div>
     </div>
   </div>
-  <div class="hint">It auto-detects what the caller wants. Try <b>"how much for a new water heater"</b>, <b>"what are your hours"</b>, or <b>"reschedule my appt"</b>.</div>
+  <div class="hint">It auto-detects what the caller wants. Try <b>"how much for a full groom on a large dog"</b>, <b>"what are your hours"</b>, or <b>"reschedule my appt"</b>.</div>
 </div>
 
 <script>
-/* ===== HollerDesk multi-function virtual front desk (deterministic brain, no backend) =====
-   Functions: answer · book · quote · FAQ · reschedule · emergency-escalate · spam-screen.
-   Production swaps this engine for an LLM + Vapi telephony; the flow & capture are identical. */
+/* ===== GroomLine multi-function virtual front desk (deterministic brain, no backend) =====
+   Functions: answer · book · quote-by-size · deposit · FAQ · reschedule · welfare-flag · spam-screen.
+   Production swaps this engine for the front-desk engine + Twilio/a managed voice platform; flow & capture are identical. */
 const $=s=>document.querySelector(s);
 const chat=$('#chat');
 let voiceOn=true, recognizing=false, recog=null;
-// Voices load asynchronously — the natural/online ones often arrive via 'voiceschanged'
-// after first paint, so cache them and refresh, and warm the list up on load.
 let VOICES=[];
 function loadVoices(){if(window.speechSynthesis)VOICES=speechSynthesis.getVoices()||[];}
 if(window.speechSynthesis){loadVoices();speechSynthesis.addEventListener('voiceschanged',loadVoices);}
-const lead={intent:null,name:null,phone:null,address:null,service:null,urgency:null,outcome:null,emergency:false};
+const lead={intent:null,name:null,phone:null,pet:null,address:null,service:null,urgency:null,outcome:null,emergency:false};
 let step='await_intent';
 
-const BIZ={garage:'Garage Door Co',hvac:'HVAC Co',plumbing:'Plumbing Co'};
-const SVC={garage:'garage door',hvac:'AC / heating',plumbing:'plumbing'};
-const WINDOWS=['today 2–4pm','today 4–6pm','tomorrow 8–10am','tomorrow 12–2pm'];
+const BIZ={mobile:'Paws on Wheels',salon:'The Groom Room'};
+const MOBILE={mobile:true,salon:false};
+const WINDOWS=['Tue 9–11am','Wed 1–3pm','Thu 10am–12pm','Sat 9–11am'];
 const KB={
-  garage:{hours:'7am–7pm, Mon–Sat',area:'the Twin Cities metro',price:'A service call starts around $89, applied to the repair'},
-  hvac:{hours:'8am–8pm daily, emergencies 24/7',area:'the Twin Cities metro',price:'A diagnostic visit starts around $99'},
-  plumbing:{hours:'8am–6pm, plus 24/7 emergencies',area:'the Twin Cities metro',price:'A service call starts around $79'}
+  mobile:{hours:'Tue–Sat, by neighborhood route',area:'the Twin Cities metro (booked by zone/day)',price:'A full groom runs about $75 (small) to $150 (large or doodle)'},
+  salon:{hours:'8am–5pm, Tue–Sat',area:'Uptown Minneapolis',price:'A full groom runs about $65 (small) to $130 (large)'}
 };
-const EMERGENCY=/(gas|smell|flood|flooding|water everywhere|burst|fire|smoke|spark|no heat|freezing|no a\/?c|carbon monoxide|sewage|electrical|won'?t shut)/i;
-const SPAM=/(warranty|seo|rank your|google listing|press 1|final notice|car's extended|solar quote|marketing service)/i;
+const WELFARE=/(matt(ed|ing)|pelt|aggressive|bite|biting|injured|hurt|bleeding|sick|limping|hot spot|wound)/i;
+const SPAM=/(warranty|seo|rank your|google listing|press 1|final notice|marketing service|wholesale|supplier|extended)/i;
 
 function add(t,who){const d=document.createElement('div');d.className='msg '+who;d.textContent=t;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;}
 function typing(){const t=document.createElement('div');t.className='typing';t.id='typing';t.innerHTML='<span></span><span></span><span></span>';chat.appendChild(t);chat.scrollTop=chat.scrollHeight;}
 function untyping(){const t=$('#typing');if(t)t.remove();}
 function pickVoice(){const vs=(VOICES.length?VOICES:speechSynthesis.getVoices()).filter(v=>v.lang&&v.lang.toLowerCase().startsWith('en'));
   const rank=v=>{const n=(v.name+' '+(v.voiceURI||'')).toLowerCase();
-    if(/zira/.test(n))return 0;                                                       // preferred app voice — Microsoft Zira
-    if(/natural|neural|premium|enhanced/.test(n))return 1;                            // neural/premium fallback (non-Windows)
-    if(/google (us|uk) english/.test(n))return 2;                                    // Google online voices
-    if(/samantha|aria|jenny|libby|sonia|ava|allison|joanna|hazel|susan|eva/.test(n))return 3; // premium/female named voices
+    if(/zira/.test(n))return 0;
+    if(/natural|neural|premium|enhanced/.test(n))return 1;
+    if(/google (us|uk) english/.test(n))return 2;
+    if(/samantha|aria|jenny|libby|sonia|ava|allison|joanna|hazel|susan|eva/.test(n))return 3;
     if(/female/.test(n))return 4;
-    if(/david|mark|george|guy|paul|james|ryan|eric|christopher|matthew|alex/.test(n))return 6; // basic male voices — last resort
+    if(/david|mark|george|guy|paul|james|ryan|eric|christopher|matthew|alex/.test(n))return 6;
     return 5;};
   return vs.slice().sort((a,b)=>rank(a)-rank(b))[0];}
-function speak(t){if(!voiceOn||!window.speechSynthesis)return;const u=new SpeechSynthesisUtterance(t.replace(/[✅👋📲🧲🚨🛡️]/g,''));u.lang='en-US';u.rate=0.97;u.pitch=1.0;const p=pickVoice();if(p)u.voice=p;speechSynthesis.cancel();speechSynthesis.speak(u);}
+function speak(t){if(!voiceOn||!window.speechSynthesis)return;const u=new SpeechSynthesisUtterance(t.replace(/[✅👋📲🧲🚨🛡️🐾🐩💳]/g,''));u.lang='en-US';u.rate=0.97;u.pitch=1.0;const p=pickVoice();if(p)u.voice=p;speechSynthesis.cancel();speechSynthesis.speak(u);}
 function bot(t,d=650){typing();setTimeout(()=>{untyping();add(t,'bot');speak(t);},d);}
 
-function setField(f,val){lead[f]=val;const el=$('#f-'+f);el.textContent=val;el.classList.remove('empty');el.parentElement.classList.add('filled');setTimeout(()=>el.parentElement.classList.remove('filled'),600);}
-function setIntent(label,color){lead.intent=label;const el=$('#intent');el.className='intent show';el.textContent='🎯 Detected: '+label;}
+function setField(f,val){lead[f]=val;const el=$('#f-'+f);if(!el)return;el.textContent=val;el.classList.remove('empty');el.parentElement.classList.add('filled');setTimeout(()=>el.parentElement.classList.remove('filled'),600);}
+function setIntent(label){lead.intent=label;const el=$('#intent');el.className='intent show';el.textContent='🎯 Detected: '+label;}
 function extractName(t){let m=t.match(/(?:my name is|this is|it'?s|i'?m|im)\s+([a-zA-Z][a-zA-Z'-]+)/i);return ((m?m[1]:t.trim().split(/\s+/)[0])||'there').replace(/[^a-zA-Z'-]/g,'')||'there';}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 function extractPhone(t){const d=t.replace(/[^\d]/g,'');return d.length>=10?d.slice(-10).replace(/(\d{3})(\d{3})(\d{4})/,'($1) $2-$3'):t.trim();}
 function shortJob(t){return t.length>42?t.slice(0,42)+'…':t;}
+function sizeFrom(t){if(/giant|great dane|mastiff|newf/i.test(t))return'giant';if(/large|lab|golden|doodle|shepherd|husky|big/i.test(t))return'large';if(/medium|spaniel|bulldog|beagle/i.test(t))return'medium';if(/toy|teacup|chihuahua|yorkie|tiny/i.test(t))return'toy';if(/small|min|terrier|shih|pom|dachs/i.test(t))return'small';return'medium';}
+const PRICE={toy:[65,90],small:[75,100],medium:[95,130],large:[125,170],giant:[150,200]};
 
 function detectIntent(t){
   if(SPAM.test(t))return'spam';
-  if(EMERGENCY.test(t))return'emergency';
+  if(WELFARE.test(t))return'welfare';
   if(/leave (a )?review|write (a )?review|rate you|review link/i.test(t))return'review';
   if(/confirm( my)?( appointment| appt| booking)?|^\s*c\s*$|^reminder/i.test(t))return'reminder';
   if(/reschedul|cancel|move (my|the)|change (my|the).*(appoint|booking|time)|push back/i.test(t))return'reschedule';
   if(/quote|estimate|how much|price|pricing|cost|charge|ballpark|rate/i.test(t))return'quote';
-  if(/hour|open|close|what time|service area|areas|do you (serve|cover|work|do)|where are you|located|coverage|finance|warranty\b/i.test(t))return'faq';
+  if(/hour|open|close|what time|service area|areas|do you (serve|cover|come|do)|where are you|located|coverage|vaccin|cat\b/i.test(t))return'faq';
   return'book';
 }
 
 function handle(text){
   add(text,'me');
-  const trade=$('#trade').value, biz=BIZ[trade], svc=SVC[trade], kb=KB[trade];
+  const trade=$('#trade').value, biz=BIZ[trade], kb=KB[trade], mobile=MOBILE[trade];
 
   if(step==='await_intent'){
     const it=detectIntent(text);
     if(it==='spam'){setIntent('Spam / robocall');setField('service',shortJob(text));setField('outcome','🛡️ Screened — blocked');
-      bot("This looks like a sales or spam call, so I'm screening it out — your owner won't be bothered. Take care!",500);
-      const u=$('#urg');u.className='urg good';u.innerHTML='🛡️ <b>Spam screened</b> — filtered before it ever reached the owner.';step='ended';return;}
+      bot("This looks like a sales call, so I'm screening it out — the groomer won't be interrupted. Take care!",500);
+      const u=$('#urg');u.className='urg good';u.innerHTML='🛡️ <b>Spam screened</b> — filtered before it ever reached the groomer.';step='ended';return;}
     setField('service',shortJob(text));
-    if(it==='emergency'){lead.emergency=true;setIntent('Emergency');setField('urgency','🚨 EMERGENCY');bot("Okay — I'm flagging this as urgent. First, can I grab your name?");step='name';return;}
-    if(it==='quote'){setIntent('Quote / estimate');bot(`Happy to get you an estimate on your ${svc}. What's the issue, and can I grab your name?`);step='name';return;}
-    if(it==='reminder'){setIntent('Reminder reply');setField('service','Appointment reminder');setField('outcome','✅ Confirmed');bot("Great — you're all confirmed! We'll see you then. Reply here anytime if you need to change it.",450);const u=$('#urg');u.className='urg good';u.innerHTML='📅 <b>Reminder confirmed</b> — appointment locked in, owner updated.';fireOwner('faq');step='wrap';return;}
-    if(it==='review'){setIntent('Review request');setField('service','Review request');setField('outcome','⭐ Review link sent');bot("Thanks so much! Here's your review link: g.page/r/your-business ⭐ — it takes 20 seconds and really helps us out.",450);const u=$('#urg');u.className='urg good';u.innerHTML='⭐ <b>Review request sent</b> — fired automatically right after the job.';step='wrap';return;}
-    if(it==='faq'){setIntent('Question');answerFaq(text,kb,svc);return;}
+    if(it==='welfare'){lead.emergency=true;setIntent('Welfare / matting');setField('urgency','🚨 Needs groomer review');bot("Thanks for flagging that — coat and welfare come first, so I'll have the groomer look at this personally. Can I grab your name?");step='name';return;}
+    if(it==='quote'){setIntent('Quote / estimate');bot("Happy to give you a price range. What's your dog's breed or rough size — and your name?");step='quote_pet';return;}
+    if(it==='reminder'){setIntent('Reminder reply');setField('service','Appointment reminder');setField('outcome','✅ Confirmed');bot("Great — you're all confirmed! See you and your pup then. Reply here anytime to change it.",450);const u=$('#urg');u.className='urg good';u.innerHTML='📅 <b>Reminder confirmed</b> — slot locked in, groomer updated.';fireOwner('faq');step='wrap';return;}
+    if(it==='review'){setIntent('Review request');setField('service','Review request');setField('outcome','⭐ Review link sent');bot("Thanks so much! Here's your review link: g.page/r/your-grooming ⭐ — takes 20 seconds and really helps us out.",450);const u=$('#urg');u.className='urg good';u.innerHTML='⭐ <b>Review request sent</b> — fired automatically after the groom.';step='wrap';return;}
+    if(it==='faq'){setIntent('Question');answerFaq(text,kb);return;}
     if(it==='reschedule'){setIntent('Reschedule');setField('service','Reschedule existing appointment');bot("Sure, I can help reschedule. What's the name on the appointment?");step='resched_name';return;}
-    setIntent('New booking');bot("Happy to help with that. Can I grab your name?");step='name';return;
+    setIntent('New booking');bot("Happy to get your pup in! Can I grab your name?");step='name';return;
   }
 
   /* FAQ → maybe book */
   if(step==='faq_more'){
     if(/\b(yes|sure|ok|okay|please|book|schedule|yeah|yep)\b/i.test(text)){lead.intent='New booking';$('#intent').textContent='🎯 Detected: New booking';bot("Great — can I grab your name?");step='name';return;}
-    if(/\b(no|nope|nothing|that'?s it|all good|thanks|thank you)\b/i.test(text)){setField('outcome','Question answered');bot("You got it — thanks for calling! 👋",400);fireOwner('faq');step='ended';return;}
-    answerFaq(text,KB[$('#trade').value],SVC[$('#trade').value]);return;
+    if(/\b(no|nope|nothing|that'?s it|all good|thanks|thank you)\b/i.test(text)){setField('outcome','Question answered');bot("You got it — give us a bark anytime! 🐾",400);fireOwner('faq');step='ended';return;}
+    answerFaq(text,KB[$('#trade').value]);return;
   }
 
-  /* shared identity capture for book/quote/emergency */
-  if(step==='name'){setField('name',cap(extractName(text)));bot(`Thanks ${lead.name}! What's the best phone number?`);step='phone';return;}
-  if(step==='phone'){setField('phone',extractPhone(text));bot(`Got it — ${lead.phone}. And the service address?`);step='address';return;}
-  if(step==='address'){setField('address',text.trim());
-    if(lead.emergency){fireEmergency();return;}
-    if(lead.intent==='Quote / estimate'){setField('outcome','Estimate requested');bot(`Perfect — a technician will text you an estimate for your ${SVC[$('#trade').value]} shortly. Anything else?`,700);fireOwner('quote');step='wrap';return;}
-    bot("Is this an emergency, or can we schedule a visit?");step='urgency';return;}
-  if(step==='urgency'){
-    if(EMERGENCY.test(text)||/emergenc|urgent|right now|asap/i.test(text)){lead.emergency=true;setField('urgency','🚨 EMERGENCY');fireEmergency();return;}
-    setField('urgency','Scheduled');bot(`I can get a technician out ${WINDOWS[0]} or ${WINDOWS[2]}. Which works better?`);step='book';return;}
-  if(step==='book'){let w=WINDOWS[0];if(/4|6|later|evening/i.test(text))w=WINDOWS[1];if(/tomorrow|8|morning/i.test(text))w=WINDOWS[2];if(/12|noon|afternoon/i.test(text))w=WINDOWS[3];
-    setField('outcome','✅ Booked '+w);bot(`Perfect — you're booked for ${w}. ✅`,500);
-    setTimeout(()=>{bot(`All set, ${lead.name}! I've sent everything to the team. Anything else?`,650);const u=$('#urg');u.className='urg good';u.innerHTML='✅ <b>Job booked</b> and dropped on the calendar — the owner did nothing.';fireOwner('booked');step='wrap';},1500);return;}
+  /* quote flow: pet/size → range */
+  if(step==='quote_pet'){const sz=sizeFrom(text);setField('pet',shortJob(text));const[lo,hi]=PRICE[sz];
+    setField('service',`Full groom (${sz})`);setField('outcome',`Estimate $${lo}–$${hi}`);
+    bot(`For a ${sz} dog, a full groom runs about $${lo}–$${hi} — the groomer confirms once they see the coat (matting can add a little). Want me to get you booked?`,750);step='faq_more';return;}
+
+  /* shared capture for book / welfare */
+  if(step==='name'){setField('name',cap(extractName(text)));bot(`Thanks ${lead.name}! What's the best mobile number?`);step='phone';return;}
+  if(step==='phone'){setField('phone',extractPhone(text));bot(`Got it — ${lead.phone}. And what's your dog's name and breed?`);step='pet';return;}
+  if(step==='pet'){setField('pet',shortJob(text));
+    if(lead.emergency){setField('outcome','🚨 Sent to groomer to review');fireWelfare();return;}
+    if(mobile){bot("Perfect. What's the service address so I can fit you into the route?");step='address';return;}
+    offerWindows(biz);step='book';return;}
+  if(step==='address'){setField('address',text.trim());offerWindows(BIZ[$('#trade').value]);step='book';return;}
+  if(step==='book'){let w=WINDOWS[0];if(/wed|1|afternoon/i.test(text))w=WINDOWS[1];if(/thu|10|morning/i.test(text))w=WINDOWS[2];if(/sat|weekend|9/i.test(text))w=WINDOWS[3];
+    setField('urgency','Scheduled');setField('outcome','✅ Booked '+w);bot(`Perfect — ${lead.pet||'your pup'} is booked for ${w}. ✅`,500);
+    setTimeout(()=>{bot(`To hold the spot I've texted a quick $20 deposit link — it goes toward the groom. 💳 Want me to set up a regular every-6-week visit too?`,900);const u=$('#urg');u.className='urg good';u.innerHTML='✅ <b>Groom booked</b> + deposit link sent — the groomer never touched the phone.';fireOwner('booked');step='recurring';},1500);return;}
+  if(step==='recurring'){
+    if(/\b(yes|sure|ok|okay|please|yeah|yep|set)\b/i.test(text)){setField('outcome',lead.outcome+' · every 6 wks');bot("Done — I'll keep that every-6-week slot and remind you before each one. Anything else?",600);step='wrap';return;}
+    bot("No problem — just the one visit. Anything else?",450);step='wrap';return;}
 
   /* reschedule flow */
   if(step==='resched_name'){setField('name',cap(extractName(text)));bot(`Thanks ${lead.name} — what's the phone number on file?`);step='resched_phone';return;}
   if(step==='resched_phone'){setField('phone',extractPhone(text));bot("And what day or time works better for you?");step='resched_when';return;}
-  if(step==='resched_when'){setField('urgency','Reschedule');setField('outcome','🔁 Reschedule → '+shortJob(text));bot(`Got it — I've put in a reschedule request for ${text.trim()} and the team will confirm by text. Anything else?`,700);fireOwner('reschedule');step='wrap';return;}
+  if(step==='resched_when'){setField('urgency','Reschedule');setField('outcome','🔁 Reschedule → '+shortJob(text));bot(`Got it — reschedule request in for ${text.trim()}; the groomer will confirm by text. Anything else?`,700);fireOwner('reschedule');step='wrap';return;}
 
-  /* wrap-up after any completed flow */
   if(step==='wrap'){
-    if(/\b(no|nope|nothing|that'?s it|all good|thanks|thank you|bye)\b/i.test(text)){bot("Thanks for calling — take care! 👋",400);step='ended';return;}
-    // they asked for something else → re-route
+    if(/\b(no|nope|nothing|that'?s it|all good|thanks|thank you|bye)\b/i.test(text)){bot("Thanks for calling — give your pup a treat from us! 🐾",400);step='ended';return;}
     step='await_intent';handle(text);return;
   }
   bot("Got it — could you tell me a little more?");
 }
 
-function answerFaq(text,kb,svc){
+function offerWindows(biz){bot(`I've got ${WINDOWS[0]} or ${WINDOWS[3]} open${MOBILE[$('#trade').value]?" in your area":""}. Which works better?`);}
+function answerFaq(text,kb){
   let a;
-  if(/hour|open|close|what time/i.test(text))a=`We're open ${kb.hours}.`;
-  else if(/area|cover|where|located|serve/i.test(text))a=`We cover ${kb.area}.`;
-  else if(/price|cost|how much|charge|quote|estimate|rate|ballpark/i.test(text))a=`${kb.price} — the technician confirms the exact price on site.`;
-  else if(/finance|payment|warranty/i.test(text))a=`Yes — we offer financing and stand behind our work. A team member can walk you through the details.`;
-  else a=`Yes, we handle that — we're a full-service ${svc} company.`;
+  if(/hour|open|close|what time/i.test(text))a=`We groom ${kb.hours}.`;
+  else if(/area|cover|where|located|serve|come/i.test(text))a=`We cover ${kb.area}.`;
+  else if(/price|cost|how much|charge|quote|estimate|rate|ballpark/i.test(text))a=`${kb.price} — confirmed once the groomer sees the coat.`;
+  else if(/vaccin/i.test(text))a=`We just need your dog's rabies vaccination up to date.`;
+  else if(/cat/i.test(text))a=`Yes — we groom cats too; just let us know the temperament.`;
+  else a=`Yes, we can help with that.`;
   setField('service',shortJob(text));setField('outcome','Question answered');
-  bot(a+" Would you like me to book you in while I have you?",600);step='faq_more';
+  bot(a+" Want me to get your pup booked while I have you?",600);step='faq_more';
 }
-function fireEmergency(){
-  if(!lead.urgency||lead.urgency!=='🚨 EMERGENCY')setField('urgency','🚨 EMERGENCY');
-  setField('outcome','🚨 Escalated to owner');
-  bot("I'm flagging this as urgent and getting the owner to call you right back. Hang tight — help is on the way.",500);
-  const u=$('#urg');u.className='urg emergency';u.innerHTML='🚨 <b>Emergency detected</b> — owner is being <b>called right now</b>, not just messaged.';
-  setTimeout(()=>{fireOwner('emergency');setTimeout(()=>{bot(`You're all set, ${lead.name||'there'} — someone will reach you immediately.`,600);step='ended';},900);},700);
+function fireWelfare(){
+  setField('urgency','🚨 Needs groomer review');
+  bot("I've sent this straight to the groomer to review before booking — for a heavily matted or upset dog they'll want to plan the safest approach. They'll reach out shortly.",600);
+  const u=$('#urg');u.className='urg emergency';u.innerHTML='🚨 <b>Welfare case flagged</b> — sent to the groomer to review <b>personally</b> before any booking.';
+  setTimeout(()=>{fireOwner('welfare');setTimeout(()=>{bot(`You're all set, ${lead.name||'there'} — we'll be in touch very soon.`,600);step='ended';},900);},700);
 }
 function fireOwner(kind){
-  const heads={booked:'📲 Lead + booking sent to the owner',quote:'📲 Estimate request sent to the owner',reschedule:'📲 Reschedule request sent to the owner',faq:'📲 Call summary sent to the owner',emergency:'🚨 URGENT — owner called immediately'};
-  const o=$('#owner');o.classList.add('show');$('#ownerHead').textContent=heads[kind]||'📲 Sent to the owner';
-  $('#ownerBody').innerHTML=`<b>${lead.name||'Caller'}</b> ${lead.phone?'· '+lead.phone:''}<br>${lead.address?lead.address+'<br>':''}`+
-    `Topic: <b>${lead.service||'—'}</b><br>`+(kind==='emergency'?`<b style="color:#ff9a9d">Call back immediately</b>`:`Outcome: <b>${lead.outcome||'—'}</b>`);
+  const heads={booked:'📲 Booking + deposit sent to the groomer',quote:'📲 Estimate sent to the groomer',reschedule:'📲 Reschedule request sent to the groomer',faq:'📲 Call summary sent to the groomer',welfare:'🚨 WELFARE — groomer to review now'};
+  const o=$('#owner');o.classList.add('show');$('#ownerHead').textContent=heads[kind]||'📲 Sent to the groomer';
+  $('#ownerBody').innerHTML=`<b>${lead.name||'Caller'}</b> ${lead.phone?'· '+lead.phone:''}<br>${lead.pet?'🐕 '+lead.pet+'<br>':''}${lead.address?lead.address+'<br>':''}`+
+    `Service: <b>${lead.service||'—'}</b><br>`+(kind==='welfare'?`<b style="color:#ff9a9d">Review before booking</b>`:`Outcome: <b>${lead.outcome||'—'}</b>`);
 }
 
 /* controls */
 function start(){
   chat.innerHTML='';Object.keys(lead).forEach(k=>lead[k]=k==='emergency'?false:null);
-  ['name','phone','address','service','urgency','outcome'].forEach(f=>{const e=$('#f-'+f);e.textContent='—';e.classList.add('empty');});
+  ['name','phone','pet','address','service','urgency','outcome'].forEach(f=>{const e=$('#f-'+f);e.textContent='—';e.classList.add('empty');});
   $('#intent').className='intent';$('#urg').className='urg';$('#owner').classList.remove('show');
-  step='await_intent';const b=BIZ[$('#trade').value];$('#bizName').textContent='HollerDesk · '+b;
-  bot(`Thanks for calling ${b}, this is the front desk — how can I help today?`,350);
+  step='await_intent';const b=BIZ[$('#trade').value];$('#bizName').textContent='GroomLine · '+b;
+  bot(`Thanks for calling ${b}, this is the front desk — how can I help your pup today?`,350);
 }
 $('#sendBtn').onclick=()=>{const v=$('#input').value.trim();if(!v||step==='ended')return;$('#input').value='';handle(v);};
 $('#input').addEventListener('keydown',e=>{if(e.key==='Enter')$('#sendBtn').click();});
