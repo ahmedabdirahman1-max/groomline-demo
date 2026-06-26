@@ -3,301 +3,193 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>GroomLine — Live Front-Desk Demo</title>
-<meta name="description" content="Talk or type to GroomLine&#39;s virtual front desk for groomers. It books grooms, quotes by size, takes a deposit, answers questions, reschedules, and flags welfare cases — capturing every lead in real time." />
+<title>GroomLine — the front desk that books grooms while your hands are full</title>
+<meta name="description" content="GroomLine is the all-in-one front desk for solo & mobile pet groomers. It answers every call and text, books the groom, takes a deposit, fills cancellations, and rebooks regulars — one flat app, no metered minutes, no separate booking software." />
 <meta name="theme-color" content="#1b1147" />
 <style>
   :root{
-    --bg1:#1b1147;--bg2:#102a40;--glass:rgba(255,255,255,.06);--glass-line:rgba(255,255,255,.14);
-    --txt:#f4f1ff;--txt2:#bcb3da;--accent:#ff6b6b;--accent2:#2dd4bf;--accent3:#ffd166;--blue:#8aa0ff;--lime:#34d399;--red:#ff5a6a;
-    --grad:linear-gradient(120deg,#ff6b6b,#ffa07a);--grad2:linear-gradient(120deg,#2dd4bf,#8aa0ff);
+    --bg1:#1b1147;--bg2:#102a40;--glass:rgba(255,255,255,.06);--line:rgba(255,255,255,.14);
+    --txt:#f4f1ff;--txt2:#bcb3da;--pink:#ff6b6b;--teal:#2dd4bf;--gold:#ffd166;--blue:#8aa0ff;--lime:#34d399;--red:#ff5a6a;
+    --grad:linear-gradient(120deg,#ff6b6b,#ffa07a);--grad2:linear-gradient(120deg,#2dd4bf,#8aa0ff);--gradtext:linear-gradient(120deg,#ff8a7d,#ffd166);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--txt);min-height:100vh;line-height:1.5;
-    background:radial-gradient(1200px 600px at 10% -10%,#3a1d6e 0%,transparent 60%),radial-gradient(900px 500px at 110% 10%,#0f5a6e 0%,transparent 55%),linear-gradient(160deg,var(--bg1),var(--bg2));background-attachment:fixed}
-  .wrap{max-width:1120px;margin:0 auto;padding:22px}
-  .top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:8px}
-  .brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:1.35rem;letter-spacing:-.02em}
-  .brand .mark{width:38px;height:38px;border-radius:11px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 6px 22px rgba(255,106,43,.5)}
-  .tagline{color:var(--txt2);font-size:.92rem}
-  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  select,.toggle{background:var(--glass);border:1px solid var(--glass-line);color:var(--txt);border-radius:10px;padding:8px 12px;font-size:.85rem;cursor:pointer}
-  .toggle.on{background:var(--grad2);color:#06122a;border-color:transparent;font-weight:700}
-  .grid{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;margin-top:14px}
-  @media(max-width:880px){.grid{grid-template-columns:1fr}}
-  .panel{background:var(--glass);border:1px solid var(--glass-line);border-radius:20px;backdrop-filter:blur(14px);overflow:hidden}
-  .phone-head{padding:16px 18px;border-bottom:1px solid var(--glass-line);display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.04)}
-  .avatar{width:42px;height:42px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
-  .ph-name{font-weight:700}.ph-status{font-size:.8rem;color:var(--accent2);display:flex;align-items:center;gap:6px}
-  .dot{width:8px;height:8px;border-radius:50%;background:var(--accent2);box-shadow:0 0 0 0 rgba(46,211,160,.7);animation:pulse 1.8s infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,211,160,.6)}70%{box-shadow:0 0 0 9px rgba(46,211,160,0)}100%{box-shadow:0 0 0 0 rgba(46,211,160,0)}}
-  .chat{height:400px;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px}
-  .msg{max-width:82%;padding:11px 15px;border-radius:16px;font-size:.95rem;animation:rise .3s ease}
-  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  .msg.bot{align-self:flex-start;background:rgba(255,255,255,.09);border-bottom-left-radius:5px}
-  .msg.me{align-self:flex-end;background:var(--grad);color:#fff;border-bottom-right-radius:5px;font-weight:500}
-  .typing{align-self:flex-start;display:flex;gap:4px;padding:13px 16px;background:rgba(255,255,255,.09);border-radius:16px;border-bottom-left-radius:5px}
-  .typing span{width:7px;height:7px;border-radius:50%;background:var(--txt2);animation:blink 1.2s infinite}
-  .typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
-  @keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
-  .chips{display:flex;gap:7px;flex-wrap:wrap;padding:0 14px 12px}
-  .chip{background:var(--glass);border:1px solid var(--glass-line);color:var(--txt2);border-radius:999px;padding:7px 13px;font-size:.82rem;cursor:pointer;transition:all .12s}
-  .chip:hover{border-color:var(--accent);color:var(--txt)}
-  .inbar{display:flex;gap:9px;padding:14px;border-top:1px solid var(--glass-line);background:rgba(0,0,0,.18)}
-  .inbar input{flex:1;background:var(--glass);border:1px solid var(--glass-line);color:var(--txt);border-radius:12px;padding:12px 14px;font-size:.95rem;outline:none}
-  .inbar input:focus{border-color:var(--accent)}
-  .iconbtn{width:46px;border:none;border-radius:12px;cursor:pointer;font-size:1.1rem;color:#fff}
-  .send{background:var(--grad)}.mic{background:var(--glass);border:1px solid var(--glass-line)}
-  .mic.live{background:var(--red);animation:pulse2 1s infinite}@keyframes pulse2{50%{opacity:.6}}
-  .cap-head{padding:16px 18px;border-bottom:1px solid var(--glass-line);font-weight:700;display:flex;align-items:center;gap:8px}
-  .cap-body{padding:16px 18px}
-  .intent{display:none;margin-bottom:6px;padding:9px 13px;border-radius:11px;font-size:.85rem;font-weight:700;background:rgba(63,134,255,.16);border:1px solid var(--blue);color:#cfe0ff}
-  .intent.show{display:block;animation:rise .3s ease}
-  .field{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px dashed rgba(255,255,255,.09);font-size:.92rem}
-  .field .k{color:var(--txt2)}.field .v{font-weight:600;text-align:right;color:var(--txt);max-width:60%}
-  .field .v.empty{color:rgba(255,255,255,.25);font-weight:400;font-style:italic}
-  .field.filled{animation:flash .6s ease}@keyframes flash{0%{background:rgba(57,217,138,.18)}100%{background:transparent}}
-  .urg{margin-top:14px;padding:13px 15px;border-radius:13px;font-size:.9rem;display:none}
-  .urg.emergency{display:block;background:rgba(255,90,95,.16);border:1px solid var(--red);color:#ffd2d4}
-  .urg.good{display:block;background:rgba(46,211,160,.14);border:1px solid var(--accent2);color:#b9fff2}
-  .owner{margin-top:14px;border-radius:14px;overflow:hidden;border:1px solid var(--glass-line);display:none}
-  .owner.show{display:block;animation:rise .4s ease}
-  .owner .oh{background:var(--grad2);color:#06122a;font-weight:700;padding:9px 14px;font-size:.85rem}
-  .owner .ob{padding:13px 15px;font-size:.86rem;color:var(--txt2)}.owner .ob b{color:var(--txt)}
-  .restart{margin-top:16px;width:100%;padding:12px;border:none;border-radius:12px;background:var(--glass);border:1px solid var(--glass-line);color:var(--txt);font-weight:600;cursor:pointer}
-  .restart:hover{background:rgba(255,255,255,.1)}
-  .fnrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;justify-content:center}
-  .fn{font-size:.72rem;color:var(--txt2);background:var(--glass);border:1px solid var(--glass-line);border-radius:999px;padding:4px 10px}
-  .hint{text-align:center;color:var(--txt2);font-size:.82rem;margin-top:14px}.hint b{color:var(--accent3)}
-  .badge{display:inline-block;background:var(--glass);border:1px solid var(--glass-line);border-radius:999px;padding:4px 11px;font-size:.74rem;color:var(--txt2);margin-left:6px}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--txt);line-height:1.55;
+    background:radial-gradient(1100px 600px at 8% -8%,#3a1d6e 0,transparent 58%),radial-gradient(900px 520px at 112% 6%,#0f5a6e 0,transparent 55%),linear-gradient(165deg,var(--bg1),var(--bg2));background-attachment:fixed;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+  a{color:inherit;text-decoration:none}
+  .gt{background:var(--gradtext);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .btn{display:inline-block;background:var(--grad);color:#fff;font-weight:800;padding:15px 28px;border-radius:14px;font-size:1.02rem;border:none;cursor:pointer;box-shadow:0 10px 30px rgba(255,106,43,.35);transition:transform .12s,box-shadow .12s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(255,106,43,.5)}
+  .btn.alt{background:var(--grad2);box-shadow:0 10px 30px rgba(46,211,160,.3);color:#06122a}
+  .btn.ghost{background:var(--glass);border:1px solid var(--line);color:var(--txt);box-shadow:none}
+  header{position:sticky;top:0;z-index:20;backdrop-filter:blur(12px);background:rgba(20,10,51,.72);border-bottom:1px solid var(--line)}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;padding:15px 22px}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:1.3rem;letter-spacing:-.02em}
+  .brand .mark{width:36px;height:36px;border-radius:11px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1.15rem;box-shadow:0 6px 20px rgba(255,106,43,.5)}
+  .navlinks a{color:var(--txt2);margin-left:22px;font-size:.92rem}.navlinks a:hover{color:var(--txt)}
+  @media(max-width:720px){.navlinks{display:none}}
+  .hero{text-align:center;padding:84px 0 54px}
+  .pill{display:inline-flex;gap:8px;align-items:center;background:var(--glass);border:1px solid var(--line);color:var(--txt2);font-size:.84rem;padding:7px 16px;border-radius:999px;margin-bottom:24px}
+  .pill .live{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 0 rgba(46,211,160,.7);animation:pulse 1.8s infinite}
+  @keyframes pulse{70%{box-shadow:0 0 0 8px rgba(46,211,160,0)}100%{box-shadow:0 0 0 0 rgba(46,211,160,0)}}
+  h1{font-size:clamp(2.3rem,6vw,4rem);line-height:1.05;letter-spacing:-.03em;margin-bottom:20px}
+  .rotor{display:inline-block;min-width:5ch;text-align:left}
+  .sub{font-size:clamp(1.05rem,2.2vw,1.32rem);color:var(--txt2);max-width:660px;margin:0 auto 30px}
+  .cta{display:flex;gap:13px;justify-content:center;flex-wrap:wrap}
+  .micro{margin-top:16px;color:var(--txt2);font-size:.9rem}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:54px 0}
+  .stat{background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:24px;text-align:center;backdrop-filter:blur(10px);transition:transform .15s}
+  .stat:hover{transform:translateY(-4px)}
+  .stat .n{font-size:2rem;font-weight:800}.stat .n.a{color:var(--teal)}.stat .n.b{color:var(--gold)}.stat .n.c{color:var(--pink)}
+  .stat .l{color:var(--txt2);font-size:.9rem;margin-top:5px}
+  section{padding:52px 0}
+  h2{font-size:clamp(1.7rem,4vw,2.5rem);letter-spacing:-.02em;text-align:center;margin-bottom:12px}
+  .lead{color:var(--txt2);text-align:center;max-width:660px;margin:0 auto 36px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:26px;backdrop-filter:blur(10px);transition:transform .15s,border-color .15s}
+  .card:hover{transform:translateY(-5px);border-color:rgba(255,106,43,.5)}
+  .card .ic{font-size:1.7rem;margin-bottom:10px}
+  .card h3{font-size:1.12rem;margin-bottom:7px}.card p{color:var(--txt2);font-size:.94rem}
+  .stepn{width:36px;height:36px;border-radius:11px;background:var(--grad2);color:#06122a;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+  .cmp{background:var(--glass);border:1px solid var(--line);border-radius:20px;overflow:hidden;backdrop-filter:blur(10px)}
+  .cmp .row{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:0;border-bottom:1px solid var(--line)}
+  .cmp .row:last-child{border-bottom:none}
+  .cmp .cell{padding:15px 18px;font-size:.93rem}
+  .cmp .head{font-weight:800;background:rgba(255,255,255,.05)}
+  .cmp .them{color:var(--txt2)}
+  .cmp .us{background:linear-gradient(120deg,rgba(255,106,43,.12),rgba(46,211,160,.1));font-weight:600}
+  .cmp .us:before{content:"✓ ";color:var(--lime);font-weight:800}
+  .cmp .them:before{content:"✗ ";color:var(--red);font-weight:800}
+  @media(max-width:720px){.cmp .cell{padding:11px;font-size:.82rem}}
+  .prices{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;max-width:760px;margin:0 auto}
+  .price{background:var(--glass);border:1px solid var(--line);border-radius:20px;padding:30px;text-align:center;backdrop-filter:blur(10px)}
+  .price.feat{border-color:var(--pink);box-shadow:0 0 0 2px rgba(255,106,43,.3)}
+  .price .tag{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:var(--gradtext);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .price .amt{font-size:2.5rem;font-weight:800;margin:8px 0}.price .amt span{font-size:.95rem;color:var(--txt2);font-weight:500}
+  .price ul{list-style:none;text-align:left;margin:18px 0;color:var(--txt2);font-size:.94rem}
+  .price li{padding:6px 0 6px 28px;position:relative}.price li:before{content:"✓";position:absolute;left:0;color:var(--teal);font-weight:800}
+  details{background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-bottom:12px;max-width:760px;margin-left:auto;margin-right:auto}
+  summary{font-weight:700;cursor:pointer}summary::-webkit-details-marker{color:var(--pink)}
+  details p{color:var(--txt2);margin-top:10px;font-size:.94rem}
+  .final{background:linear-gradient(120deg,rgba(255,106,43,.16),rgba(46,211,160,.12));border:1px solid var(--line);border-radius:24px;padding:54px 28px;text-align:center;backdrop-filter:blur(10px)}
+  footer{border-top:1px solid var(--line);padding:32px 0;color:var(--txt2);font-size:.88rem;text-align:center}
+  @media(max-width:760px){.stats,.grid3,.prices{grid-template-columns:1fr}.cmp .row{grid-template-columns:1.2fr 1fr 1fr}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="top">
-    <div>
-      <div class="brand"><div class="mark">🐾</div> GroomLine <span class="badge">LIVE DEMO</span></div>
-      <div class="tagline">One front desk for groomers — it books, quotes by size, takes a deposit, reschedules & flags welfare cases.</div>
+<header><div class="wrap" style="max-width:1100px;margin:0 auto">
+  <div class="brand"><div class="mark">🐾</div> GroomLine</div>
+  <div class="navlinks"><a href="#how">How it works</a><a href="#compare">vs. others</a><a href="#pricing">Pricing</a><a href="demo/" target="_blank" rel="noopener" class="gt" style="font-weight:700">Try it live →</a></div>
+</div></header>
+
+<div class="hero"><div class="wrap">
+  <span class="pill"><span class="live"></span> Built for solo & mobile groomers · live in 48 hours</span>
+  <h1>Your hands are in a dog.<br><span class="gt">Who's answering the phone?</span></h1>
+  <p class="sub">GroomLine is the all-in-one front desk for groomers. It answers every call and text, books the groom, takes a deposit, fills cancellations, and rebooks your regulars — one flat app, no metered minutes, no separate booking software.</p>
+  <div class="cta">
+    <a href="demo/" target="_blank" rel="noopener" class="btn">🐾 Talk to it live →</a>
+    <a href="#pricing" class="btn ghost">See pricing</a>
+  </div>
+  <div class="micro">No setup fee · flat price, no per-minute or per-text games · keep your own number</div>
+
+  <div class="stats">
+    <div class="stat"><div class="n a">Flat</div><div class="l">$59–79/mo — no metered minutes or SMS</div></div>
+    <div class="stat"><div class="n b c" data-count="10" data-suffix="s" data-pre="&lt;">0s</div><div class="l">to answer, book & text back the client</div></div>
+    <div class="stat"><div class="n c">$75–150</div><div class="l">a single groom you'd lose to voicemail</div></div>
+  </div>
+</div></div>
+
+<section id="how"><div class="wrap">
+  <h2>The phone rings mid-groom. <span class="gt">We answer.</span></h2>
+  <p class="lead">You can't stop mid-brush to pick up — and voicemail is where bookings go to die. GroomLine answers on ring one, books the groom, and texts you the lead. The clients who only text? It books them too.</p>
+  <div class="grid3">
+    <div class="card"><div class="ic">✂️</div><h3>On a dog</h3><p>Hands full, clippers running — it picks up, sounds human, books the appointment, and drops the lead on your phone.</p></div>
+    <div class="card"><div class="ic">📵</div><h3>Missed the call?</h3><p>The instant a call rings out, it texts the client back — "sorry we missed you, hands were in a pup!" — and books them by text.</p></div>
+    <div class="card"><div class="ic">💳</div><h3>Holds the spot</h3><p>Takes a card-on-file deposit so no-shows stop costing you, and offers your regulars an every-4/6/8-week slot.</p></div>
+  </div>
+  <div style="text-align:center;margin-top:30px"><a href="demo/" target="_blank" rel="noopener" class="btn alt">▶ Hear the live demo book a groom</a></div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Set up in <span class="gt">3 steps</span> — you keep grooming</h2>
+  <p class="lead">It's done-for-you. No second app to wire up, no PMS to learn.</p>
+  <div class="grid3">
+    <div class="card"><div class="stepn">1</div><h3>Forward your missed calls</h3><p>Only the calls you don't pick up (or after-hours) route to GroomLine. Your number and phone never change.</p></div>
+    <div class="card"><div class="stepn">2</div><h3>We train it on your grooming</h3><p>Your services, sizes & pricing, route days/zones, vaccination rules, and what's a welfare flag. Live in 48 hours.</p></div>
+    <div class="card"><div class="stepn">3</div><h3>Booked grooms hit your phone</h3><p>Every call/text → owner, pet, breed/size, service, deposit — booked to your calendar and texted to you.</p></div>
+  </div>
+</div></section>
+
+<section id="compare"><div class="wrap">
+  <h2>Why GroomLine <span class="gt">beats stacking AgentZap on MoeGo</span></h2>
+  <p class="lead">The usual setup is an virtual-receptionist <em>layer</em> (AgentZap) bolted onto booking software (MoeGo) — two subscriptions, both metered. GroomLine is one app that does all of it.</p>
+  <div class="cmp">
+    <div class="row"><div class="cell head">&nbsp;</div><div class="cell head them" style="background:rgba(255,255,255,.05)">AgentZap + MoeGo</div><div class="cell head" style="background:rgba(255,106,43,.14)">GroomLine</div></div>
+    <div class="row"><div class="cell head">Setup</div><div class="cell them">Two subscriptions to wire together</div><div class="cell us">One app, done-for-you</div></div>
+    <div class="row"><div class="cell head">Pricing</div><div class="cell them">Metered minutes + metered SMS + ~$399 setup</div><div class="cell us">Flat $59–79, no metered, no setup fee</div></div>
+    <div class="row"><div class="cell head">Booking calendar</div><div class="cell them">Lives in MoeGo (a separate sub)</div><div class="cell us">Built in — native</div></div>
+    <div class="row"><div class="cell head">Deposits / no-show holds</div><div class="cell them">Depends on the PMS</div><div class="cell us">Built in — card-on-file hold</div></div>
+    <div class="row"><div class="cell head">Recurring + waitlist fill</div><div class="cell them">Partial</div><div class="cell us">Built in</div></div>
+    <div class="row"><div class="cell head">What it does</div><div class="cell them">Answers, then hands off to the PMS</div><div class="cell us">Answers, books, deposit, rebooks, fills cancellations</div></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>One front desk. <span class="gt">Every booking.</span></h2>
+  <p class="lead">Not just an answering machine — the whole front office for a grooming business, so nothing slips.</p>
+  <div class="grid3">
+    <div class="card"><div class="ic">📅</div><h3>Books & reschedules</h3><p>Sets grooms on your calendar with the right length for the breed & size, and handles change/cancel requests for you.</p></div>
+    <div class="card"><div class="ic">💵</div><h3>Quotes by size</h3><p>Gives a price range by size & coat so shoppers don't bounce — and notes the groomer confirms after seeing the dog.</p></div>
+    <div class="card"><div class="ic">💳</div><h3>Deposits & no-show holds</h3><p>Texts a card-on-file deposit to hold the slot; applied to the groom, or kept on a no-show.</p></div>
+    <div class="card"><div class="ic">🔁</div><h3>Rebooks regulars</h3><p>Puts pets on an every-4/6/8-week cycle and fills cancellations from the waitlist automatically.</p></div>
+    <div class="card"><div class="ic">🚨</div><h3>Flags welfare cases</h3><p>Severe matting, an aggressive or hurt dog — it flags it for you to review personally before booking.</p></div>
+    <div class="card"><div class="ic">📲</div><h3>Texts you everything</h3><p>Every call/text becomes a clean lead — owner, pet, breed, service — in seconds. Missed-call text-back included.</p></div>
+  </div>
+</div></section>
+
+<section id="pricing"><div class="wrap">
+  <h2>Flat pricing, <span class="gt">no surprises</span></h2>
+  <p class="lead">One price, everything included — no per-minute meter, no per-text overage, no $399 setup. Start with a 14-day free pilot on your real calls.</p>
+  <div class="prices">
+    <div class="price">
+      <div class="tag">Solo / salon</div>
+      <div class="amt">$59<span>/mo flat</span></div>
+      <ul><li>Answers every call <b>and</b> text</li><li>Native booking + breed/size durations</li><li>Deposits + no-show holds</li><li>Reminders, reviews, recurring rebooking</li><li>Unlimited texts — no metering</li></ul>
+      <a href="#contact" class="btn ghost" style="width:100%">Start free pilot</a>
     </div>
-    <div class="controls">
-      <select id="trade" title="Business type">
-        <option value="mobile">🚐 Paws on Wheels (mobile)</option>
-        <option value="salon">🛁 The Groom Room (salon)</option>
-      </select>
-      <button class="toggle on" id="voiceBtn" title="Toggle voice">🔊 Voice on</button>
+    <div class="price feat">
+      <div class="tag">Mobile van — most popular</div>
+      <div class="amt">$79<span>/mo flat</span></div>
+      <ul><li>Everything in Solo, plus:</li><li><b>Route-aware booking</b> by zone/day</li><li><b>Missed-call text-back</b> (hands-full hero)</li><li>Waitlist auto-fill of cancellations</li><li>1 van · multi-van $129</li></ul>
+      <a href="#contact" class="btn" style="width:100%">Start the free pilot</a>
     </div>
   </div>
+</div></section>
 
-  <div class="grid">
-    <div class="panel">
-      <div class="phone-head">
-        <div class="avatar">🐾</div>
-        <div>
-          <div class="ph-name" id="bizName">GroomLine · Paws on Wheels</div>
-          <div class="ph-status"><span class="dot"></span> answering — even mid-groom</div>
-        </div>
-      </div>
-      <div class="chat" id="chat"></div>
-      <div class="chips" id="chips">
-        <span class="chip" data-s="My goldendoodle needs a full groom">🐩 New groom</span>
-        <span class="chip" data-s="How much for a full groom?">💵 Get a quote</span>
-        <span class="chip" data-s="What are your hours and area?">❓ Ask a question</span>
-        <span class="chip" data-s="I need to reschedule my appointment">📅 Reschedule</span>
-        <span class="chip" data-s="Confirm my appointment">✅ Confirm reminder</span>
-        <span class="chip" data-s="I'd like to leave a review">⭐ Leave a review</span>
-        <span class="chip" data-s="My dog is really badly matted, almost a solid pelt">🚨 Matting / welfare</span>
-      </div>
-      <div class="inbar">
-        <input id="input" placeholder="Type your reply…  or tap a button above" autocomplete="off"/>
-        <button class="iconbtn mic" id="micBtn" title="Speak">🎤</button>
-        <button class="iconbtn send" id="sendBtn" title="Send">➤</button>
-      </div>
-    </div>
+<section><div class="wrap">
+  <h2>Questions groomers ask</h2>
+  <details><summary>Does it sound like a robot?</summary><p>No — a natural, friendly voice that greets callers by your business name and handles real back-and-forth. Try the live demo and judge for yourself.</p></details>
+  <details><summary>Do I need MoeGo or another booking app too?</summary><p>No. The calendar, deposits, reminders and rebooking are built in — GroomLine is the whole front desk, not a layer on top of other software.</p></details>
+  <details><summary>Do I have to change my number?</summary><p>Never. We forward only the calls you'd otherwise miss, and reply to texts on your line. Your number, your phone, unchanged.</p></details>
+  <details><summary>What about a badly matted or aggressive dog?</summary><p>Welfare first — it flags those cases for you to review personally before any booking, so you can plan the safe approach.</p></details>
+</div></section>
 
-    <div class="panel">
-      <div class="cap-head">🧲 What GroomLine captured <span class="badge" id="capCount">live</span></div>
-      <div class="cap-body">
-        <div class="intent" id="intent"></div>
-        <div class="field" data-f="name"><span class="k">Owner</span><span class="v empty" id="f-name">—</span></div>
-        <div class="field" data-f="phone"><span class="k">Phone</span><span class="v empty" id="f-phone">—</span></div>
-        <div class="field" data-f="pet"><span class="k">Pet</span><span class="v empty" id="f-pet">—</span></div>
-        <div class="field" data-f="address"><span class="k">Address / area</span><span class="v empty" id="f-address">—</span></div>
-        <div class="field" data-f="service"><span class="k">Service</span><span class="v empty" id="f-service">—</span></div>
-        <div class="field" data-f="urgency"><span class="k">Status</span><span class="v empty" id="f-urgency">—</span></div>
-        <div class="field" data-f="outcome"><span class="k">Outcome</span><span class="v empty" id="f-outcome">—</span></div>
-        <div class="urg" id="urg"></div>
-        <div class="owner" id="owner"><div class="oh" id="ownerHead">📲 Sent to the groomer — instantly</div><div class="ob" id="ownerBody"></div></div>
-        <button class="restart" id="restart">↺ Start a new call</button>
-        <div class="fnrow"><span class="fn">📞 Answer</span><span class="fn">📅 Book</span><span class="fn">💵 Quote</span><span class="fn">💳 Deposit</span><span class="fn">❓ FAQ</span><span class="fn">🔁 Reschedule</span><span class="fn">⏰ Reminders</span><span class="fn">⭐ Reviews</span><span class="fn">🚨 Welfare flag</span></div>
-      </div>
-    </div>
+<section id="contact"><div class="wrap">
+  <div class="final">
+    <h2 style="margin-bottom:14px">See how many grooms you're missing — <span class="gt">free for 14 days</span>.</h2>
+    <p class="sub" style="margin:0 auto 26px">Run it on your own calls and texts. If it doesn't book you work, you walk away owing nothing.</p>
+    <div class="cta"><a href="mailto:hello@groomline.app?subject=GroomLine%20free%20pilot" class="btn">Start the free pilot →</a><a href="demo/" target="_blank" rel="noopener" class="btn ghost">Try the live agent</a></div>
+    <div class="micro">hello@groomline.app · groomline.app</div>
   </div>
-  <div class="hint">It auto-detects what the caller wants. Try <b>"how much for a full groom on a large dog"</b>, <b>"what are your hours"</b>, or <b>"reschedule my appt"</b>.</div>
-</div>
+</div></section>
+
+<footer><div class="wrap"><strong>GroomLine</strong> — the all-in-one front desk for solo & mobile pet groomers. Never miss another booking.</div></footer>
 
 <script>
-/* ===== GroomLine multi-function virtual front desk (deterministic brain, no backend) =====
-   Functions: answer · book · quote-by-size · deposit · FAQ · reschedule · welfare-flag · spam-screen.
-   Production swaps this engine for the front-desk engine + Twilio/a managed voice platform; flow & capture are identical. */
-const $=s=>document.querySelector(s);
-const chat=$('#chat');
-let voiceOn=true, recognizing=false, recog=null;
-let VOICES=[];
-function loadVoices(){if(window.speechSynthesis)VOICES=speechSynthesis.getVoices()||[];}
-if(window.speechSynthesis){loadVoices();speechSynthesis.addEventListener('voiceschanged',loadVoices);}
-const lead={intent:null,name:null,phone:null,pet:null,address:null,service:null,urgency:null,outcome:null,emergency:false};
-let step='await_intent';
-
-const BIZ={mobile:'Paws on Wheels',salon:'The Groom Room'};
-const MOBILE={mobile:true,salon:false};
-const WINDOWS=['Tue 9–11am','Wed 1–3pm','Thu 10am–12pm','Sat 9–11am'];
-const KB={
-  mobile:{hours:'Tue–Sat, by neighborhood route',area:'the Twin Cities metro (booked by zone/day)',price:'A full groom runs about $75 (small) to $150 (large or doodle)'},
-  salon:{hours:'8am–5pm, Tue–Sat',area:'Uptown Minneapolis',price:'A full groom runs about $65 (small) to $130 (large)'}
-};
-const WELFARE=/(matt(ed|ing)|pelt|aggressive|bite|biting|injured|hurt|bleeding|sick|limping|hot spot|wound)/i;
-const SPAM=/(warranty|seo|rank your|google listing|press 1|final notice|marketing service|wholesale|supplier|extended)/i;
-
-function add(t,who){const d=document.createElement('div');d.className='msg '+who;d.textContent=t;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;}
-function typing(){const t=document.createElement('div');t.className='typing';t.id='typing';t.innerHTML='<span></span><span></span><span></span>';chat.appendChild(t);chat.scrollTop=chat.scrollHeight;}
-function untyping(){const t=$('#typing');if(t)t.remove();}
-function pickVoice(){const vs=(VOICES.length?VOICES:speechSynthesis.getVoices()).filter(v=>v.lang&&v.lang.toLowerCase().startsWith('en'));
-  const rank=v=>{const n=(v.name+' '+(v.voiceURI||'')).toLowerCase();
-    if(/zira/.test(n))return 0;
-    if(/natural|neural|premium|enhanced/.test(n))return 1;
-    if(/google (us|uk) english/.test(n))return 2;
-    if(/samantha|aria|jenny|libby|sonia|ava|allison|joanna|hazel|susan|eva/.test(n))return 3;
-    if(/female/.test(n))return 4;
-    if(/david|mark|george|guy|paul|james|ryan|eric|christopher|matthew|alex/.test(n))return 6;
-    return 5;};
-  return vs.slice().sort((a,b)=>rank(a)-rank(b))[0];}
-function speak(t){if(!voiceOn||!window.speechSynthesis)return;const u=new SpeechSynthesisUtterance(t.replace(/[✅👋📲🧲🚨🛡️🐾🐩💳]/g,''));u.lang='en-US';u.rate=0.97;u.pitch=1.0;const p=pickVoice();if(p)u.voice=p;speechSynthesis.cancel();speechSynthesis.speak(u);}
-function bot(t,d=650){typing();setTimeout(()=>{untyping();add(t,'bot');speak(t);},d);}
-
-function setField(f,val){lead[f]=val;const el=$('#f-'+f);if(!el)return;el.textContent=val;el.classList.remove('empty');el.parentElement.classList.add('filled');setTimeout(()=>el.parentElement.classList.remove('filled'),600);}
-function setIntent(label){lead.intent=label;const el=$('#intent');el.className='intent show';el.textContent='🎯 Detected: '+label;}
-function extractName(t){let m=t.match(/(?:my name is|this is|it'?s|i'?m|im)\s+([a-zA-Z][a-zA-Z'-]+)/i);return ((m?m[1]:t.trim().split(/\s+/)[0])||'there').replace(/[^a-zA-Z'-]/g,'')||'there';}
-function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
-function extractPhone(t){const d=t.replace(/[^\d]/g,'');return d.length>=10?d.slice(-10).replace(/(\d{3})(\d{3})(\d{4})/,'($1) $2-$3'):t.trim();}
-function shortJob(t){return t.length>42?t.slice(0,42)+'…':t;}
-function sizeFrom(t){if(/giant|great dane|mastiff|newf/i.test(t))return'giant';if(/large|lab|golden|doodle|shepherd|husky|big/i.test(t))return'large';if(/medium|spaniel|bulldog|beagle/i.test(t))return'medium';if(/toy|teacup|chihuahua|yorkie|tiny/i.test(t))return'toy';if(/small|min|terrier|shih|pom|dachs/i.test(t))return'small';return'medium';}
-const PRICE={toy:[65,90],small:[75,100],medium:[95,130],large:[125,170],giant:[150,200]};
-
-function detectIntent(t){
-  if(SPAM.test(t))return'spam';
-  if(WELFARE.test(t))return'welfare';
-  if(/leave (a )?review|write (a )?review|rate you|review link/i.test(t))return'review';
-  if(/confirm( my)?( appointment| appt| booking)?|^\s*c\s*$|^reminder/i.test(t))return'reminder';
-  if(/reschedul|cancel|move (my|the)|change (my|the).*(appoint|booking|time)|push back/i.test(t))return'reschedule';
-  if(/quote|estimate|how much|price|pricing|cost|charge|ballpark|rate/i.test(t))return'quote';
-  if(/hour|open|close|what time|service area|areas|do you (serve|cover|come|do)|where are you|located|coverage|vaccin|cat\b/i.test(t))return'faq';
-  return'book';
-}
-
-function handle(text){
-  add(text,'me');
-  const trade=$('#trade').value, biz=BIZ[trade], kb=KB[trade], mobile=MOBILE[trade];
-
-  if(step==='await_intent'){
-    const it=detectIntent(text);
-    if(it==='spam'){setIntent('Spam / robocall');setField('service',shortJob(text));setField('outcome','🛡️ Screened — blocked');
-      bot("This looks like a sales call, so I'm screening it out — the groomer won't be interrupted. Take care!",500);
-      const u=$('#urg');u.className='urg good';u.innerHTML='🛡️ <b>Spam screened</b> — filtered before it ever reached the groomer.';step='ended';return;}
-    setField('service',shortJob(text));
-    if(it==='welfare'){lead.emergency=true;setIntent('Welfare / matting');setField('urgency','🚨 Needs groomer review');bot("Thanks for flagging that — coat and welfare come first, so I'll have the groomer look at this personally. Can I grab your name?");step='name';return;}
-    if(it==='quote'){setIntent('Quote / estimate');bot("Happy to give you a price range. What's your dog's breed or rough size — and your name?");step='quote_pet';return;}
-    if(it==='reminder'){setIntent('Reminder reply');setField('service','Appointment reminder');setField('outcome','✅ Confirmed');bot("Great — you're all confirmed! See you and your pup then. Reply here anytime to change it.",450);const u=$('#urg');u.className='urg good';u.innerHTML='📅 <b>Reminder confirmed</b> — slot locked in, groomer updated.';fireOwner('faq');step='wrap';return;}
-    if(it==='review'){setIntent('Review request');setField('service','Review request');setField('outcome','⭐ Review link sent');bot("Thanks so much! Here's your review link: g.page/r/your-grooming ⭐ — takes 20 seconds and really helps us out.",450);const u=$('#urg');u.className='urg good';u.innerHTML='⭐ <b>Review request sent</b> — fired automatically after the groom.';step='wrap';return;}
-    if(it==='faq'){setIntent('Question');answerFaq(text,kb);return;}
-    if(it==='reschedule'){setIntent('Reschedule');setField('service','Reschedule existing appointment');bot("Sure, I can help reschedule. What's the name on the appointment?");step='resched_name';return;}
-    setIntent('New booking');bot("Happy to get your pup in! Can I grab your name?");step='name';return;
-  }
-
-  /* FAQ → maybe book */
-  if(step==='faq_more'){
-    if(/\b(yes|sure|ok|okay|please|book|schedule|yeah|yep)\b/i.test(text)){lead.intent='New booking';$('#intent').textContent='🎯 Detected: New booking';bot("Great — can I grab your name?");step='name';return;}
-    if(/\b(no|nope|nothing|that'?s it|all good|thanks|thank you)\b/i.test(text)){setField('outcome','Question answered');bot("You got it — give us a bark anytime! 🐾",400);fireOwner('faq');step='ended';return;}
-    answerFaq(text,KB[$('#trade').value]);return;
-  }
-
-  /* quote flow: pet/size → range */
-  if(step==='quote_pet'){const sz=sizeFrom(text);setField('pet',shortJob(text));const[lo,hi]=PRICE[sz];
-    setField('service',`Full groom (${sz})`);setField('outcome',`Estimate $${lo}–$${hi}`);
-    bot(`For a ${sz} dog, a full groom runs about $${lo}–$${hi} — the groomer confirms once they see the coat (matting can add a little). Want me to get you booked?`,750);step='faq_more';return;}
-
-  /* shared capture for book / welfare */
-  if(step==='name'){setField('name',cap(extractName(text)));bot(`Thanks ${lead.name}! What's the best mobile number?`);step='phone';return;}
-  if(step==='phone'){setField('phone',extractPhone(text));bot(`Got it — ${lead.phone}. And what's your dog's name and breed?`);step='pet';return;}
-  if(step==='pet'){setField('pet',shortJob(text));
-    if(lead.emergency){setField('outcome','🚨 Sent to groomer to review');fireWelfare();return;}
-    if(mobile){bot("Perfect. What's the service address so I can fit you into the route?");step='address';return;}
-    offerWindows(biz);step='book';return;}
-  if(step==='address'){setField('address',text.trim());offerWindows(BIZ[$('#trade').value]);step='book';return;}
-  if(step==='book'){let w=WINDOWS[0];if(/wed|1|afternoon/i.test(text))w=WINDOWS[1];if(/thu|10|morning/i.test(text))w=WINDOWS[2];if(/sat|weekend|9/i.test(text))w=WINDOWS[3];
-    setField('urgency','Scheduled');setField('outcome','✅ Booked '+w);bot(`Perfect — ${lead.pet||'your pup'} is booked for ${w}. ✅`,500);
-    setTimeout(()=>{bot(`To hold the spot I've texted a quick $20 deposit link — it goes toward the groom. 💳 Want me to set up a regular every-6-week visit too?`,900);const u=$('#urg');u.className='urg good';u.innerHTML='✅ <b>Groom booked</b> + deposit link sent — the groomer never touched the phone.';fireOwner('booked');step='recurring';},1500);return;}
-  if(step==='recurring'){
-    if(/\b(yes|sure|ok|okay|please|yeah|yep|set)\b/i.test(text)){setField('outcome',lead.outcome+' · every 6 wks');bot("Done — I'll keep that every-6-week slot and remind you before each one. Anything else?",600);step='wrap';return;}
-    bot("No problem — just the one visit. Anything else?",450);step='wrap';return;}
-
-  /* reschedule flow */
-  if(step==='resched_name'){setField('name',cap(extractName(text)));bot(`Thanks ${lead.name} — what's the phone number on file?`);step='resched_phone';return;}
-  if(step==='resched_phone'){setField('phone',extractPhone(text));bot("And what day or time works better for you?");step='resched_when';return;}
-  if(step==='resched_when'){setField('urgency','Reschedule');setField('outcome','🔁 Reschedule → '+shortJob(text));bot(`Got it — reschedule request in for ${text.trim()}; the groomer will confirm by text. Anything else?`,700);fireOwner('reschedule');step='wrap';return;}
-
-  if(step==='wrap'){
-    if(/\b(no|nope|nothing|that'?s it|all good|thanks|thank you|bye)\b/i.test(text)){bot("Thanks for calling — give your pup a treat from us! 🐾",400);step='ended';return;}
-    step='await_intent';handle(text);return;
-  }
-  bot("Got it — could you tell me a little more?");
-}
-
-function offerWindows(biz){bot(`I've got ${WINDOWS[0]} or ${WINDOWS[3]} open${MOBILE[$('#trade').value]?" in your area":""}. Which works better?`);}
-function answerFaq(text,kb){
-  let a;
-  if(/hour|open|close|what time/i.test(text))a=`We groom ${kb.hours}.`;
-  else if(/area|cover|where|located|serve|come/i.test(text))a=`We cover ${kb.area}.`;
-  else if(/price|cost|how much|charge|quote|estimate|rate|ballpark/i.test(text))a=`${kb.price} — confirmed once the groomer sees the coat.`;
-  else if(/vaccin/i.test(text))a=`We just need your dog's rabies vaccination up to date.`;
-  else if(/cat/i.test(text))a=`Yes — we groom cats too; just let us know the temperament.`;
-  else a=`Yes, we can help with that.`;
-  setField('service',shortJob(text));setField('outcome','Question answered');
-  bot(a+" Want me to get your pup booked while I have you?",600);step='faq_more';
-}
-function fireWelfare(){
-  setField('urgency','🚨 Needs groomer review');
-  bot("I've sent this straight to the groomer to review before booking — for a heavily matted or upset dog they'll want to plan the safest approach. They'll reach out shortly.",600);
-  const u=$('#urg');u.className='urg emergency';u.innerHTML='🚨 <b>Welfare case flagged</b> — sent to the groomer to review <b>personally</b> before any booking.';
-  setTimeout(()=>{fireOwner('welfare');setTimeout(()=>{bot(`You're all set, ${lead.name||'there'} — we'll be in touch very soon.`,600);step='ended';},900);},700);
-}
-function fireOwner(kind){
-  const heads={booked:'📲 Booking + deposit sent to the groomer',quote:'📲 Estimate sent to the groomer',reschedule:'📲 Reschedule request sent to the groomer',faq:'📲 Call summary sent to the groomer',welfare:'🚨 WELFARE — groomer to review now'};
-  const o=$('#owner');o.classList.add('show');$('#ownerHead').textContent=heads[kind]||'📲 Sent to the groomer';
-  $('#ownerBody').innerHTML=`<b>${lead.name||'Caller'}</b> ${lead.phone?'· '+lead.phone:''}<br>${lead.pet?'🐕 '+lead.pet+'<br>':''}${lead.address?lead.address+'<br>':''}`+
-    `Service: <b>${lead.service||'—'}</b><br>`+(kind==='welfare'?`<b style="color:#ff9a9d">Review before booking</b>`:`Outcome: <b>${lead.outcome||'—'}</b>`);
-}
-
-/* controls */
-function start(){
-  chat.innerHTML='';Object.keys(lead).forEach(k=>lead[k]=k==='emergency'?false:null);
-  ['name','phone','pet','address','service','urgency','outcome'].forEach(f=>{const e=$('#f-'+f);e.textContent='—';e.classList.add('empty');});
-  $('#intent').className='intent';$('#urg').className='urg';$('#owner').classList.remove('show');
-  step='await_intent';const b=BIZ[$('#trade').value];$('#bizName').textContent='GroomLine · '+b;
-  bot(`Thanks for calling ${b}, this is the front desk — how can I help your pup today?`,350);
-}
-$('#sendBtn').onclick=()=>{const v=$('#input').value.trim();if(!v||step==='ended')return;$('#input').value='';handle(v);};
-$('#input').addEventListener('keydown',e=>{if(e.key==='Enter')$('#sendBtn').click();});
-$('#restart').onclick=start;$('#trade').onchange=start;
-document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{if(step==='ended')start();const v=c.dataset.s;setTimeout(()=>{if(step!=='ended'){$('#input').value='';handle(v);}},step==='await_intent'?0:50);});
-$('#voiceBtn').onclick=function(){voiceOn=!voiceOn;this.classList.toggle('on',voiceOn);this.textContent=voiceOn?'🔊 Voice on':'🔇 Voice off';if(!voiceOn)speechSynthesis.cancel();};
-
-const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-if(SR){recog=new SR();recog.continuous=false;recog.interimResults=false;recog.lang='en-US';
-  recog.onresult=e=>{$('#input').value=e.results[0][0].transcript;$('#sendBtn').click();};
-  recog.onend=()=>{recognizing=false;$('#micBtn').classList.remove('live');};
-  $('#micBtn').onclick=()=>{if(recognizing){recog.stop();return;}try{recog.start();recognizing=true;$('#micBtn').classList.add('live');}catch(e){}};
-}else{$('#micBtn').style.display='none';}
-start();
+  // count-up on view
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){const el=e.target,to=+el.dataset.count,suf=el.dataset.suffix||'',pre=el.dataset.pre||'';let n=0;const step=Math.max(1,Math.round(to/28));const t=setInterval(()=>{n+=step;if(n>=to){n=to;clearInterval(t);}el.innerHTML=pre+n+suf;},28);io.unobserve(el);}});},{threshold:.5});
+  document.querySelectorAll('[data-count]').forEach(el=>io.observe(el));
 </script>
 </body>
 </html>
